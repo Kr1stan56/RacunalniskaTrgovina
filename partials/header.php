@@ -22,6 +22,7 @@
 			<?php if (isset($_SESSION['prijavljen']) && $_SESSION['prijavljen']): ?>
 				<span class="uporabnisko-ime"><?= htmlspecialchars($_SESSION['ime'] . ' ' . $_SESSION['priimek']) ?></span>
 				<a href="odjava.php" class="gumb-odjava">Odjava</a>
+				<a href="uredi_u.php" class="gumb-odjava" style="background-color: white;color: black;float:left;"><i>UPORABNIKI</i></a>
 			<?php else: ?>
 				<a href="login.php" class="gumb-prijava">Prijava / Registracija</a>
 			<?php endif; ?>

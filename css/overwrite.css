@@ -1,6 +1,10 @@
-.sidebar{
+.sidebar-gumb{
 	float:left;
 }
+.sidebar {
+	float:left;
+}
+
 .footer{
 	clear:left;
 }

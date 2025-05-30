@@ -11,22 +11,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['prijava'])) {
         $geslo = $_POST['geslo'];
 
 
-        $stmt = $conn->prepare("SELECT id_u, ime, priimek, geslo FROM uporabniki WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id_u, ime, priimek, geslo, id_p FROM uporabniki WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $rezultat = $stmt->get_result();
         $uporabnik = $rezultat->fetch_assoc();
 
         if ($uporabnik) {
-            if (sha1($geslo) === $uporabnik['geslo']) {
-                $_SESSION['ime'] = $uporabnik['ime'];
-                $_SESSION['priimek'] = $uporabnik['priimek'];
-                $_SESSION['id_uporabnika'] = $uporabnik['id_u'];
-                $_SESSION['prijavljen'] = true;
-                
-                $uspeh = "Uspešna prijava! Pozdravljeni, " . $_SESSION['ime'] . " " . $_SESSION['priimek'];
-                header("Refresh: 1; URL=index.php");
-            } else {
+			if (sha1($geslo) === $uporabnik['geslo']) {
+				$_SESSION['ime'] = $uporabnik['ime'];
+				$_SESSION['priimek'] = $uporabnik['priimek'];
+				$_SESSION['id_uporabnika'] = $uporabnik['id_u'];
+				$_SESSION['id_p'] = $uporabnik['id_p']; // <-- ključna vrstica
+				$_SESSION['prijavljen'] = true;
+
+				$uspeh = "Uspešna prijava! Pozdravljeni, " . $_SESSION['ime'] . " " . $_SESSION['priimek'];
+				header("Refresh: 1; URL=index.php");
+			}else {
                 throw new Exception("Napačno geslo");
             }
         } else {

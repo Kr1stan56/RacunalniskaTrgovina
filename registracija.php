@@ -17,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registracija'])) {
             throw new Exception("Vsa polja so obvezna.");
         }
 
-        // Preveri, ali email že obstaja
         $stmt = $conn->prepare("SELECT id_u FROM uporabniki WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -26,13 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registracija'])) {
             throw new Exception("E-pošta je že v uporabi.");
         }
 
-        // Hashiraj geslo (trenutno sha1, za boljšo varnost predlagam password_hash)
         $hashed_geslo = sha1($geslo);
 
-        // Privzeta vrednost za p_id = 1 (kupec)
         $id_p = 1;
 
-        // Vstavi uporabnika
         $stmt = $conn->prepare("INSERT INTO uporabniki (ime, priimek, email, geslo, naslov, datum_registracije, id_p)
                                 VALUES (?, ?, ?, ?, ?, NOW(), ?)");
         $stmt->bind_param("sssssi", $ime, $priimek, $email, $hashed_geslo, $naslov, $id_p);
