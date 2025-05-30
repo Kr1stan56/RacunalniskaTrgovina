@@ -1,4 +1,6 @@
 <?php require_once 'baza.php'; ?>
+<?php include_once 'session.php'; ?>
+
 <!DOCTYPE html>
 <html lang="sl">
 <head>
@@ -6,7 +8,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Domov | Računalniška Trgovina</title>
-	<link rel="stylesheet" href="css/style15.css">
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/footer.css">
 </head>
 <body class="domaca-stran">
 

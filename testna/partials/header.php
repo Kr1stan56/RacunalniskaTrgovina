@@ -1,7 +1,12 @@
+<?php include_once 'session.php'; ?>
+
+
 <header class="header">
     <div class="glava-vsebina">
         <div class="logotip">
-            <img src="images/logo.png" alt="Logotip trgovine" class="logotip-slika">
+            <a href="index.php">
+				<img src="images/logo.png" alt="Logotip trgovine" class="logotip-slika">
+			</a>
         </div>
         
         <nav class="navigacija">
@@ -14,11 +19,18 @@
         </nav>
         
         <div class="uporabniske-akcije">
-            <a href="login.php" class="gumb-prijava">Prijava / Registracija</a>
-            <a href="#" class="ikona-kosarica">
-                <i class="fas fa-shopping-cart"></i> 
-                <span class="stevec-kosarice">0</span>
-            </a>
-        </div>
+			<?php if (isset($_SESSION['prijavljen']) && $_SESSION['prijavljen']): ?>
+				<span class="uporabnisko-ime"><?= htmlspecialchars($_SESSION['ime'] . ' ' . $_SESSION['priimek']) ?></span>
+				<a href="odjava.php" class="gumb-odjava">Odjava</a>
+			<?php else: ?>
+				<a href="login.php" class="gumb-prijava">Prijava / Registracija</a>
+			<?php endif; ?>
+
+			<a href="kosarica.php" class="ikona-kosarica">
+				<img src="images/kosarica.png" alt="Košarica" class="kosarica-ikona">
+				<span class="stevec-kosarice">0</span>
+			</a>
+		</div>
+
     </div>
 </header>

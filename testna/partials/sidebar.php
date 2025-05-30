@@ -1,7 +1,7 @@
 <div class="sidebar">
     <div class="">
         <h3 class="">Kategorije</h3>
-        <div class="">
+        <div class="kategorije-box">
             <a href="?" class="category-item <?= empty($izbrana_kategorija) ? 'active' : '' ?>">Vse kategorije</a><br>
             <?php foreach ($kategorije as $kat): ?>
             <a href="?kategorija=<?= $kat['id_ka'] ?>" 

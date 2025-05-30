@@ -1,0 +1,71 @@
+/* products.css - Only product-specific styles */
+
+.mreza-izdelkov {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    max-width: 85%;
+    margin: 0 auto;
+}
+
+.kartica-izdelka {
+    border: 1px solid #ddd;
+    padding: 1rem;
+}
+
+.kartica-izdelka:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.slika-izdelka {
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.naslov-izdelka {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+}
+
+.opis-izdelka {
+    color: #555;
+}
+
+.sekcija-cene {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cena {
+    color: #007b00;
+}
+
+.gumb-kosarica {
+    background-color: #007b00;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+.gumb-kosarica:hover {
+    background-color: #005c00;
+}
+
+.zaloga {
+    color: #777;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 1024px) {
+    .mreza-izdelkov {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .mreza-izdelkov {
+        grid-template-columns: 1fr;
+    }
+}

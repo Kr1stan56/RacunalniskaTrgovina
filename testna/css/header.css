@@ -1,0 +1,179 @@
+/* header.css - Stili samo za glavo */
+
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.glava-vsebina {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logotip-slika {
+    height: 50px;
+    transition: transform 0.3s ease;
+}
+
+.logotip-slika:hover {
+    transform: scale(1.05);
+}
+
+.navigacija .navigacijski-seznam {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+.navigacijska-postavka a {
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 5px 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.navigacijska-postavka a:hover {
+    color: #4CAF50;
+}
+
+.navigacijska-postavka a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+.navigacijska-postavka a:hover::after {
+    width: 100%;
+}
+
+.uporabniske-akcije {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Stili za prijavljenega uporabnika */
+.uporabnisko-ime {
+    font-weight: 500;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.gumb-prijava,
+.gumb-odjava {
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.gumb-prijava {
+    border: 1px solid #fff;
+    color: #fff;
+    background-color: transparent;
+}
+
+.kosarica-ikona {
+    width: 24px;
+    height: 24px;
+}
+
+
+.gumb-prijava:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.gumb-odjava {
+    border: 1px solid #f44336;
+    color: #fff;
+    background-color: #f44336;
+}
+
+.gumb-odjava:hover {
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+}
+
+.ikona-kosarica {
+    position: relative;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+}
+
+.stevec-kosarice {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: #f44336;
+    color: white;
+    padding: 1px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Odzivni dizajn */
+@media (max-width: 768px) {
+    .header {
+        padding: 15px 20px;
+    }
+    
+    .glava-vsebina {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .navigacija .navigacijski-seznam {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .uporabniske-akcije {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navigacija .navigacijski-seznam {
+        gap: 10px;
+    }
+    
+    .uporabniske-akcije {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .uporabnisko-ime {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+}

@@ -27,6 +27,8 @@ $stmt->execute();
 $kategorije = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
+<?php include_once 'session.php'; ?>
+
 <!DOCTYPE html>
 <html lang="sl">
 <head>
@@ -34,7 +36,14 @@ $kategorije = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Izdelki | Računalniška Trgovina</title>
-    <link rel="stylesheet" href="css/style15.css">
+<link rel="stylesheet" href="css/main.css">
+    
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/izdelki.css">
+    <link rel="stylesheet" href="css/footer.css">
+	
+	<link rel="stylesheet" href="css/overwrite.css">
 </head>
 <body>
     <?php include 'partials/sidebar.php'; ?>
@@ -58,7 +67,7 @@ $kategorije = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                         <div class="sekcija-cene">
                             <span class="cena"><?= number_format($izdelek['cena'], 2) ?> €</span>
                             <button class="gumb-kosarica">
-                                <i class=""></i>
+                                <i class="">DODAJ</i>
                             </button>
                         </div>
                         <small class="zaloga">Na zalogi: <?= $izdelek['zaloga'] ?></small>
