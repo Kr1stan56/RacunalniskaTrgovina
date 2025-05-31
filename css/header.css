@@ -1,95 +1,83 @@
-/* header.css - Stili samo za glavo */
-
 .header {
     background-color: #333;
     color: #fff;
-    padding: 15px 30px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.glava-vsebina {
-    display: flex;
+    padding: 15px 0;
     width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
+    overflow: hidden;
 }
 
-.logotip-slika {
-    height: 50px;
-    transition: transform 0.3s ease;
+.logotip {
+    float: left;
+    margin-left: 20%;
 }
 
-.logotip-slika:hover {
-    transform: scale(1.05);
+.logotip img {
+    height: 40px;
 }
 
-.navigacija .navigacijski-seznam {
-    display: flex;
+.navigacija {
+    float: left;
+    margin-left: 40px;
+}
+
+.navigacijski-seznam {
     list-style: none;
-    gap: 25px;
     margin: 0;
     padding: 0;
 }
 
-.navigacijska-postavka a {
-    color: #fff;
-    font-weight: 500;
-    text-decoration: none;
-    padding: 5px 0;
-    position: relative;
-    transition: color 0.3s ease;
+.navigacijski-seznam li {
+    float: left;
+    margin-right: 20px;
 }
 
-.navigacijska-postavka a:hover {
+.navigacijski-seznam li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navigacijski-seznam li a:hover {
     color: #4CAF50;
 }
 
-.navigacijska-postavka a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: #4CAF50;
-    transition: width 0.3s ease;
-}
-
-.navigacijska-postavka a:hover::after {
-    width: 100%;
-}
-
 .uporabniske-akcije {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+    float: right;
+    margin-right: 20%;
 }
 
-/* Stili za prijavljenega uporabnika */
 .uporabnisko-ime {
-    font-weight: 500;
-    color: #fff;
+    font-weight: bold;
     margin-right: 10px;
 }
 
 .gumb-prijava,
-.gumb-odjava {
-    padding: 8px 15px;
-    border-radius: 5px;
+.gumb-odjava,
+.gumb-admin {
+    padding: 5px 10px;
+    border-radius: 4px;
     text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-weight: bold;
+    color: #fff;
+    background: transparent;
+    border: 1px solid #fff;
+    margin-left: 5px;
 }
 
-.gumb-prijava {
-    border: 1px solid #fff;
-    color: #fff;
-    background-color: transparent;
+.gumb-odjava {
+    background-color: #f44336;
+    border-color: #f44336;
+}
+
+.gumb-admin {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+.ikona-kosarica {
+    float: right;
+    margin-right: 15px;
 }
 
 .kosarica-ikona {
@@ -97,83 +85,42 @@
     height: 24px;
 }
 
-
-.gumb-prijava:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.gumb-odjava {
-    border: 1px solid #f44336;
-    color: #fff;
-    background-color: #f44336;
-}
-
-.gumb-odjava:hover {
-    background-color: #d32f2f;
-    border-color: #d32f2f;
-}
-
-.ikona-kosarica {
-    position: relative;
-    color: #fff;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-}
-
 .stevec-kosarice {
-    position: absolute;
-    top: -5px;
-    right: -10px;
     background: #f44336;
     color: white;
-    padding: 1px 6px;
     border-radius: 50%;
+    padding: 1px 6px;
     font-size: 12px;
-    min-width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-left: 4px;
 }
 
-/* Odzivni dizajn */
-@media (max-width: 768px) {
-    .header {
-        padding: 15px 20px;
-    }
-    
-    .glava-vsebina {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .navigacija .navigacijski-seznam {
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .uporabniske-akcije {
-        margin-top: 10px;
-    }
+.iskalnik-vsebina {
+    width: 100%;
+	overflow: hidden;
 }
 
-@media (max-width: 480px) {
-    .navigacija .navigacijski-seznam {
-        gap: 10px;
-    }
-    
-    .uporabniske-akcije {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .uporabnisko-ime {
-        margin-right: 0;
-        margin-bottom: 5px;
-    }
+
+.iskalni-obrazec {
+    text-align: center;
+}
+
+.iskalno-polje {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 20px 0 0 20px;
+    width: 300px;
+}
+
+.gumb-iskanje {
+    padding: 8px 15px;
+    border: 1px solid #4CAF50;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+}
+.kategorija{
+	height: 34px; 
+	font-size: 13px; 
+	padding: 3px 12px;
 }

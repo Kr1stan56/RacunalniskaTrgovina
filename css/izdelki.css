@@ -2,7 +2,7 @@
     width: 85%;
     margin: 0 auto;
     font-size: 0;
-    overflow: hidden; /* počisti float */
+    overflow: hidden; 
 }
 
 .kartica-izdelka {
@@ -13,7 +13,7 @@
     border: 1px solid #ddd;
     padding: 1rem;
     box-sizing: border-box;
-    font-size: 14px; /* povrni font */
+    font-size: 14px; 
     position: relative;
 }
 
@@ -72,7 +72,6 @@
     left: 1rem;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
     .kartica-izdelka {
         width: calc(50% - 1.5rem);

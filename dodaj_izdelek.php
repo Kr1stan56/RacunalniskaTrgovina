@@ -10,7 +10,7 @@ if (!isset($_SESSION['id_p']) || $_SESSION['id_p'] != 2) {
 
 // Preberi kategorije iz baze za dropdown
 $kategorije = [];
-$result = $conn->query("SELECT  ime FROM kategorije ORDER BY ime");
+$result = $conn->query("SELECT id_ka, ime FROM kategorije ORDER BY ime");
 if ($result) {
     while ($row = $result->fetch_assoc()) {
         $kategorije[] = $row;
@@ -74,8 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['shrani'])) {
                 <select name="kategorija" required>
                     <option value="" disabled selected>Izberi kategorijo</option>
                     <?php foreach ($kategorije as $kat): ?>
-                        <option ><?= htmlspecialchars($kat['ime']) ?></option>
-                    <?php endforeach; ?>
+						<option value="<?= $kat['id_ka'] ?>"><?= htmlspecialchars($kat['ime']) ?></option>
+					<?php endforeach; ?>
+
                 </select><br><br>
 
                 <button type="submit" name="shrani">Dodaj izdelek</button>
