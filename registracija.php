@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registracija'])) {
 
         if ($stmt->execute()) {
             $uspeh = "Registracija uspešna! Lahko se prijavite.";
-            header("Refresh: 3; URL=prijava.php");
+            header("Refresh: 3; URL=login.php");
         } else {
             throw new Exception("Napaka pri registraciji.");
         }

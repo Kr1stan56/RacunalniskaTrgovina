@@ -110,8 +110,7 @@
     cursor: pointer;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 770px) {
     .sidebar-gumb {
         width: 100%;
         float: none;
@@ -123,14 +122,12 @@
     }
 
     .sidebar {
+		position:sticky;
         width: 100%;
         min-height: auto;
     }
 
-    .zapri,
-    .odpri {
-        position: static;
-        display: block;
+    .zapri, .odpri {
         margin: 10px auto;
         text-align: center;
         transform: none;

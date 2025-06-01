@@ -34,7 +34,7 @@ if ($toggle % 2 !== 0) {
 <?php
 } else 
 {?>
-<div class="sidebar-gumb zaprt">
+<div class="sidebar-gumb zaprt ">
 	<div class="odpri">
 		<a href="?toggle=<?= $toggle -1 ?>"> 
             <img src="images/right.webp" alt="Odpri sidebar">

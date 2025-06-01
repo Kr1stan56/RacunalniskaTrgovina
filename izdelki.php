@@ -2,29 +2,45 @@
 require_once 'baza.php';
 include_once 'session.php';
 
-$izbrana_kategorija = isset($_GET['kategorija']) && $_GET['kategorija'] !== '' && $_GET['kategorija'] !== 'vse'
-    ? intval($_GET['kategorija'])
-    : null;
+$izbrana_kategorija = null;
+$iskalnik = null;
 
-$iskalni_termin = isset($_GET['q']) && trim($_GET['q']) !== ''
-    ? '%' . trim($_GET['q']) . '%'
-    : null;
+if (isset($_GET['kategorija']) && $_GET['kategorija'] !== '' && $_GET['kategorija'] !== 'vse') {
+    $izbrana_kategorija = intval($_GET['kategorija']);
+}
 
-if ($iskalni_termin !== null && $izbrana_kategorija !== null) {
-    $stmt = $conn->prepare("SELECT * FROM izdelek WHERE (ime LIKE ? OR opis LIKE ?) AND id_ka = ?");
-    $stmt->bind_param("ssi", $iskalni_termin, $iskalni_termin, $izbrana_kategorija);
+if (isset($_GET['q']) && trim($_GET['q']) !== '') {
+    $iskalnik = '%' . trim($_GET['q']) . '%';
+}
+
+if ($iskalnik && $izbrana_kategorija !== null) {
+    $stmt = $conn->prepare("
+        SELECT * FROM izdelek 
+        WHERE (ime LIKE ? OR opis LIKE ?) AND id_ka = ?
+    ");
+    $stmt->bind_param("ssi", $iskalnik, $iskalnik, $izbrana_kategorija);
+
+} elseif ($iskalnik) {
+    $stmt = $conn->prepare("
+        SELECT * FROM izdelek 
+        WHERE ime LIKE ? OR opis LIKE ?
+    ");
+    $stmt->bind_param("ss", $iskalnik, $iskalnik);
+
 } elseif ($izbrana_kategorija !== null) {
-    $stmt = $conn->prepare("SELECT * FROM izdelek WHERE id_ka = ?");
+    $stmt = $conn->prepare("
+        SELECT * FROM izdelek 
+        WHERE id_ka = ?
+    ");
     $stmt->bind_param("i", $izbrana_kategorija);
-} elseif ($iskalni_termin !== null) {
-    $stmt = $conn->prepare("SELECT * FROM izdelek WHERE ime LIKE ? OR opis LIKE ?");
-    $stmt->bind_param("ss", $iskalni_termin, $iskalni_termin);
+
 } else {
+    // Privzeto: izpiši prvih 5 iz vsake kategorije
     $stmt = $conn->prepare("
         SELECT * FROM (
             SELECT *, ROW_NUMBER() OVER (PARTITION BY id_ka ORDER BY id_i) AS row_num 
             FROM izdelek
-        ) AS temp WHERE row_num <= 5
+        ) AS temp 
     ");
 }
 
