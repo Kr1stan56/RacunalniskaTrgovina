@@ -35,12 +35,10 @@ if ($iskalnik && $izbrana_kategorija !== null) {
     $stmt->bind_param("i", $izbrana_kategorija);
 
 } else {
-    // Privzeto: izpiši prvih 5 iz vsake kategorije
     $stmt = $conn->prepare("
-        SELECT * FROM (
-            SELECT *, ROW_NUMBER() OVER (PARTITION BY id_ka ORDER BY id_i) AS row_num 
-            FROM izdelek
-        ) AS temp 
+       SELECT *
+	   FROM izdelek
+		
     ");
 }
 

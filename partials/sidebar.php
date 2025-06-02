@@ -11,7 +11,7 @@ if ($toggle % 2 !== 0) {
 ?>
 <div class="sidebar-gumb">
 	<div class="sidebar">
-		<div >
+		
 		
 
 			<div class="kategorije-box">
@@ -35,7 +35,7 @@ if ($toggle % 2 !== 0) {
 				</div><br>
 				<?php endforeach; ?>
 			</div>
-		</div>
+		
 	</div>
 	<div class="zapri">
 		<a href="?toggle=<?= $toggle + 1 ?>">

@@ -1,38 +1,45 @@
 <?php
 require_once 'baza.php';
-include_once 'session.php'; 
+session_start();
 
 $napaka = '';
 $uspeh = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['prijava'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registracija'])) {
     try {
+        $ime = $_POST['ime'];
+        $priimek = $_POST['priimek'];
         $email = $_POST['email'];
         $geslo = $_POST['geslo'];
+        $naslov = $_POST['naslov'];
 
+        if (empty($ime) || empty($priimek) || empty($email) || empty($geslo) || empty($naslov)) {
+            throw new Exception("Vsa polja so obvezna.");
+        }
 
-        $stmt = $conn->prepare("SELECT id_u, ime, priimek, geslo, id_p FROM uporabniki WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id_u FROM uporabniki WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
-        $rezultat = $stmt->get_result();
-        $uporabnik = $rezultat->fetch_assoc();
-
-        if ($uporabnik) {
-			if (sha1($geslo) === $uporabnik['geslo']) {
-				$_SESSION['ime'] = $uporabnik['ime'];
-				$_SESSION['priimek'] = $uporabnik['priimek'];
-				$_SESSION['id_uporabnika'] = $uporabnik['id_u'];
-				$_SESSION['id_p'] = $uporabnik['id_p']; // <-- ključna vrstica
-				$_SESSION['prijavljen'] = true;
-
-				$uspeh = "Uspešna prijava! Pozdravljeni, " . $_SESSION['ime'] . " " . $_SESSION['priimek'];
-				header("Refresh: 1; URL=index.php");
-			}else {
-                throw new Exception("Napačno geslo");
-            }
-        } else {
-            throw new Exception("Uporabnik s tem e-poštnim naslovom ne obstaja");
+        $rez = $stmt->get_result();
+        if ($rez->num_rows > 0) {
+            throw new Exception("E-pošta je že v uporabi.");
         }
+
+        $hashed_geslo = sha1($geslo);
+
+        $id_p = 1;
+
+        $stmt = $conn->prepare("INSERT INTO uporabniki (ime, priimek, email, geslo, naslov, datum_registracije, id_p)
+                                VALUES (?, ?, ?, ?, ?, NOW(), ?)");
+        $stmt->bind_param("sssssi", $ime, $priimek, $email, $hashed_geslo, $naslov, $id_p);
+
+        if ($stmt->execute()) {
+            $uspeh = "Registracija uspešna! Lahko se prijavite.";
+            header("Refresh: 3; URL=login.php");
+        } else {
+            throw new Exception("Napaka pri registraciji.");
+        }
+
     } catch (Exception $e) {
         $napaka = $e->getMessage();
     }
