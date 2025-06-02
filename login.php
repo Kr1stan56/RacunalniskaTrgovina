@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['prijava'])) {
     <title>Prijava</title>
     <link rel="stylesheet" href="css/login.css">
 
+
 </head>
 <body>
     <div class="prijavni-okvir">
@@ -76,7 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['prijava'])) {
         <div class="povezave">
             <a href="registracija.php">Še nimate računa? Registrirajte se</a>
             <a href="ponastavi_geslo.php">Pozabljeno geslo?</a>
+			
         </div>
+		<hr>
+		<form action="index.php" method="get" >
+            <button type="submit" class="gumb" style="background-color:gray;">← Nazaj na izdelke</button>
+        </form>
     </div>
 </body>
 </html>

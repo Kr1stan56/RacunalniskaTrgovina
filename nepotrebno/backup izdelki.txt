@@ -20,19 +20,19 @@ if ($toggle % 2 !== 0) {
 				<a href="dodaj_kat.php" class="category-item " style="background-color:white;color:black;">+ Dodaj Kategorijo</a><br>
 				<?php endif; ?>
 				
-					<a href="?" class="category-item">Vse kategorije</a><br>
+					<a href="?" class="category-item <?= empty($izbrana_kategorija) ? 'active' : '' ?>">Vse kategorije</a><br>
 				<?php foreach ($kategorije as $kat): ?>
 				<div>
-					<a href="?kategorija=<?= $kat['id_ka'] ?>"class="category-item" >
+					<a href="?kategorija=<?= $kat['id_ka'] ?>" class="category-item <?= ($kat['id_ka'] == $izbrana_kategorija) ? 'active' : '' ?>">
 					   <?= htmlspecialchars($kat['ime']) ?>
 					</a>
 					
 					<?php if (isset($_SESSION['id_p']) && $_SESSION['id_p'] == 2): ?>
-					<a href="uredi_kat.php?id=<?= $kat['id_ka'] ?>"  class="category-item" style="background-color: white; color: black;">
+					<a href="uredi_izdelek.php?id=<?= $izdelek['id_i'] ?>" class="gumb-kosarica" style="background-color: white; color: black;">
 						<i>UREDI</i>
 					</a>
 					<?php endif; ?><br>
-				</div><br>
+				</div>
 				<?php endforeach; ?>
 			</div>
 		</div>
