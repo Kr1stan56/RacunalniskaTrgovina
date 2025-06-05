@@ -73,13 +73,13 @@ if ($iskalnik && $izbrana_kategorija !== null) {
 
 	<div class="iskalnik-vsebina">
 		<form action="izdelki.php" method="get" class="iskalni-obrazec">
-			<input type="text" name="q" placeholder="Kaj iščete?" value="<?= htmlspecialchars($_GET['q'] ?? '') ?>" class="iskalno-polje">
+			<input type="text" name="q" placeholder="Kaj iščete?" value="<?= $_GET['q'] ?? '' ?>" class="iskalno-polje">
 
 			<select name="kategorija" class="kategorija" >
 				<option value="" >Vse kategorije</option>
 				<?php foreach ($kategorije as $kat): ?>
 					<option value="<?= $kat['id_ka'] ?>" <?= (isset($_GET['kategorija']) && $_GET['kategorija'] == $kat['id_ka']) ? 'selected' : '' ?>>
-						<?= htmlspecialchars($kat['ime']) ?>
+						<?=$kat['ime'] ?>
 					</option>
 				<?php endforeach; ?>
 			</select>
