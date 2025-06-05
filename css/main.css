@@ -14,35 +14,34 @@ a {
 	text-decoration: none;
 	color: white;
 }
-main{
-	margin-left:15%;
-	margin-right:15%;
-	margin-top:50px;
-}
 
+main {
+	margin-left: 15%;
+	margin-right: 15%;
+	margin-top: 50px;
+}
 
 .pozdrav-slika {
 	background-image: url('../images/burger.png');
 	background-size: 90%;
-	height:600px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	height: 390px;
 }
-.pozdrav 
- {
-	padding-bottom:20px;
-	color:black;
+
+.pozdrav {
+	padding-bottom: 20px;
+	color: black;
 	text-align: center;
 }
 
-.pozdrav h1 {
-	font-size: 2.5rem;
-	color: #0078d4;
-	margin-bottom: 20px;
-}
+.pozdrav h1,
 div h1 {
 	font-size: 2.5rem;
 	color: #0078d4;
 	margin-bottom: 20px;
 }
+
 .pozdrav p {
 	font-size: 1.2rem;
 	color: black;
@@ -65,12 +64,14 @@ div h1 {
 	background-color: #005ea2;
 }
 
+/* ODSEK / CONTAINER */
 .odsek {
 	width: 90%;
 	margin: 40px auto;
-	overflow: hidden;
+	overflow: hidden; 
 }
 
+/* KARTICE */
 .kartica {
 	width: 30%;
 	margin: 1.66%;
@@ -80,6 +81,7 @@ div h1 {
 	border: 1px solid #ccc;
 	border-radius: 10px;
 	background-color: #fafafa;
+	box-sizing: border-box;
 }
 
 .kartica h3 {
@@ -95,3 +97,63 @@ div h1 {
 	color: #dc3545;
 	font-weight: bold;
 }
+
+@media (max-width: 770px) {
+	main {
+		margin-left: 5%;
+		margin-right: 5%;
+		margin-top: 30px;
+	}
+
+	.pozdrav-slika {
+		height: 250px; 
+		background-size: contain;
+	}
+
+	.pozdrav h1,
+	div h1 {
+		font-size: 1.8rem; 
+	}
+
+	.pozdrav p {
+		font-size: 1rem;
+		margin-bottom: 20px;
+	}
+
+	.odsek {
+		width: 100%;
+		margin: 20px 0;
+		overflow: visible;
+	}
+
+	.kartica {
+		width: 100%;
+		margin: 10px 0;
+		float: none; 
+		padding: 15px;
+		box-sizing: border-box;
+	}
+
+	.gumb {
+		width: 100%; 
+		box-sizing: border-box;
+	}
+}
+@media (max-width: 770px) {
+  .kartica {
+    width: 100%;
+    margin: 10px 0;
+    float: none;
+  }
+
+  .pozdrav-slika {
+    height: 250px;
+    background-size: contain;
+  }
+
+  .gumb {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+

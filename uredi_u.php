@@ -56,10 +56,10 @@ $uporabniki = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
         <tbody>
             <?php foreach ($uporabniki as $u): ?>
                 <tr>
-                    <td><?= htmlspecialchars($u['ime']) ?></td>
-                    <td><?= htmlspecialchars($u['priimek']) ?></td>
-                    <td><?= htmlspecialchars($u['email']) ?></td>
-                    <td><?= htmlspecialchars($u['privilegiji']) ?></td>
+                    <td><?= $u['ime'] ?></td>
+                    <td><?= $u['priimek'] ?></td>
+                    <td><?= $u['email']?></td>
+                    <td><?= $u['privilegiji'] ?></td>
                     <td class="button">
                         <form action="uredi_uporabnik.php" method="get">
                             <input type="hidden" name="id" value="<?= $u['id_u'] ?>">

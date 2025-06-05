@@ -81,14 +81,14 @@ $izdelki = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 		<h1>PRILJUBLJENI IZDELKI</h1>
 			<?php foreach ($izdelki as $izdelek): ?>
                 <div class="kartica-izdelka">
-                    <img src="<?= htmlspecialchars($izdelek['slika']) ?>" alt="<?= htmlspecialchars($izdelek['ime']) ?>" class="slika-izdelka">
+                    <img src="<?= $izdelek['slika'] ?>" alt="<?= $izdelek['ime'] ?>" class="slika-izdelka">
                     <div class="telo-kartice">
-                        <h3 class="naslov-izdelka"><?= htmlspecialchars($izdelek['ime']) ?></h3>
-                        <p class="opis-izdelka"><?= htmlspecialchars($izdelek['opis']) ?></p>
+                        <h3 class="naslov-izdelka"><?= $izdelek['ime'] ?></h3>
+                        <p class="opis-izdelka"><?= $izdelek['opis'] ?></p>
                     </div>
                     <div class="noga-kartice">
                         <div class="sekcija-cene">
-                            <span class="cena"><?= number_format($izdelek['cena'], 2) ?> €</span>
+                            <span class="cena"><?= $izdelek['cena'] ?> €</span>
 							<form method="post" action="kosarica.php">
 								<input type="hidden" name="id_izdelka" value="<?= $izdelek['id_i'] ?>">
 								<button type="submit" name="dodaj_v_kosarico" class="gumb-kosarica">Dodaj</button>
