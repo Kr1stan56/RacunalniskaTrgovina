@@ -9,7 +9,6 @@ if (!isset($_SESSION['prijavljen']) || $_SESSION['prijavljen'] !== true) {
 
 $id_u = $_SESSION['id_uporabnika'];
 
-// Pridobi id košarice za trenutnega uporabnika
 $stmt = $conn->prepare("SELECT id_k FROM uporabniki WHERE id_u = ?");
 $stmt->bind_param("i", $id_u);
 $stmt->execute();
