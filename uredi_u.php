@@ -7,7 +7,6 @@ if (!isset($_SESSION['id_p']) || $_SESSION['id_p'] != 2) {
     exit;
 }
 
-// Brisanje uporabnika
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['odstrani_id'])) {
     $id_odstrani = intval($_POST['odstrani_id']);
     if ($id_odstrani > 0) {
@@ -17,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['odstrani_id'])) {
     }
 }
 
-// Pridobi uporabnike
 $query = "SELECT u.id_u, u.ime, u.priimek, u.email, p.naziv AS privilegiji 
           FROM uporabniki u 
           INNER JOIN privilegiji p ON u.id_p = p.id_p";
