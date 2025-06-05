@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['prijava'])) {
         $geslo = $_POST['geslo'];
 
 
-        $stmt = $conn->prepare("SELECT id_u, ime, priimek, geslo, id_p FROM uporabniki WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id_u, ime, priimek, geslo,naslov, id_p FROM uporabniki WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $rezultat = $stmt->get_result();
@@ -22,7 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['prijava'])) {
 				$_SESSION['ime'] = $uporabnik['ime'];
 				$_SESSION['priimek'] = $uporabnik['priimek'];
 				$_SESSION['id_uporabnika'] = $uporabnik['id_u'];
-				$_SESSION['id_p'] = $uporabnik['id_p']; // <-- ključna vrstica
+				$_SESSION['ime_kupca'] = $uporabnik['ime'];
+				$_SESSION['priimek_kupca'] = $uporabnik['priimek'];
+				$_SESSION['polno_ime'] = $uporabnik['ime'] . ' ' . $uporabnik['priimek'];
+				$_SESSION['naslov'] = $uporabnik['naslov'];
+
+
+
+				$_SESSION['id_p'] = $uporabnik['id_p']; 
 				$_SESSION['prijavljen'] = true;
 
 				$uspeh = "Uspešna prijava! Pozdravljeni, " . $_SESSION['ime'] . " " . $_SESSION['priimek'];
@@ -41,48 +48,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['prijava'])) {
 <!DOCTYPE html>
 <html lang="sl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prijava</title>
-    <link rel="stylesheet" href="css/login.css">
-
-
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Prijava</title>
+	<link rel="stylesheet" href="css/uredi_dodaj.css">
 </head>
 <body>
-    <div class="prijavni-okvir">
-        <h1 class="naslov">Prijava</h1>
-        
-        <?php if ($napaka): ?>
-            <div class="napaka"><?= htmlspecialchars($napaka) ?></div>
-        <?php endif; ?>
-        
-        <?php if ($uspeh): ?>
-            <div class="uspeh"><?= htmlspecialchars($uspeh) ?></div>
-        <?php endif; ?>
-        
-        <form method="post">
-            <div class="vnosna-skupina">
-                <label for="email">E-pošta:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div class="vnosna-skupina">
-                <label for="geslo">Geslo:</label>
-                <input type="password" id="geslo" name="geslo" required>
-            </div>
-            
-            <button type="submit" name="prijava" class="gumb">Prijavi se</button>
-        </form>
-        
-        <div class="povezave">
-            <a href="registracija.php">Še nimate računa? Registrirajte se</a>
-            <a href="ponastavi_geslo.php">Pozabljeno geslo?</a>
-			
-        </div>
+
+	<div class="uredi-izdelek">
+		<h1>Prijava</h1>
+
+		<?php if ($napaka): ?>
+			<div class="napaka"><?= htmlspecialchars($napaka) ?></div>
+		<?php endif; ?>
+
+		<?php if ($uspeh): ?>
+			<div class="uspeh" style="background: #e8f5e9;" ><?= htmlspecialchars($uspeh) ?></div>
+		<?php endif; ?>
+
+		<form method="post">
+			<div class="vnosna-skupina">
+				<label for="email">E-pošta:</label>
+				<input type="email" id="email" name="email" required>
+			</div>
+
+			<div class="vnosna-skupina">
+				<label for="geslo">Geslo:</label>
+				<input type="password" id="geslo" name="geslo" required>
+			</div>
+
+			<button type="submit" name="prijava">Prijavi se</button>
+		</form>
+
+		<div class="povezave" style="margin-top: 20px;">
+			<a href="registracija.php">Še nimate računa? Registrirajte se</a><br>
+			<a href="ponastavi_geslo.php">Pozabljeno geslo?</a>
+		</div>
+
 		<hr>
-		<form action="index.php" method="get" >
-            <button type="submit" class="gumb" style="background-color:gray;">← Nazaj na izdelke</button>
-        </form>
-    </div>
+
+		<form action="index.php" method="get">
+			<button type="submit" style="background-color: gray;">← Nazaj na izdelke</button>
+		</form>
+	</div>
+
 </body>
 </html>

@@ -57,11 +57,8 @@ $kategorije = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Izdelki | Računalniška Trgovina</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/izdelki.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/partials.css">
+		<link rel="stylesheet" href="css/izdelki.css">
     <link rel="stylesheet" href="css/overwrite.css">
 </head>
 <body>
@@ -92,15 +89,19 @@ $kategorije = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
             <?php foreach ($izdelki as $izdelek): ?>
                 <div class="kartica-izdelka">
-                    <img src="<?= htmlspecialchars($izdelek['slika']) ?>" alt="<?= htmlspecialchars($izdelek['ime']) ?>" class="slika-izdelka">
+                    <img src="<?= $izdelek['slika'] ?>" alt="<?=$izdelek['ime'] ?>" class="slika-izdelka">
                     <div class="telo-kartice">
-                        <h3 class="naslov-izdelka"><?= htmlspecialchars($izdelek['ime']) ?></h3>
-                        <p class="opis-izdelka"><?= htmlspecialchars($izdelek['opis']) ?></p>
+                        <h3 class="naslov-izdelka"><?=$izdelek['ime'] ?></h3>
+                        <p class="opis-izdelka"><?=$izdelek['opis'] ?></p>
                     </div>
+					
                     <div class="noga-kartice">
                         <div class="sekcija-cene">
-                            <span class="cena"><?= number_format($izdelek['cena'], 2) ?> €</span>
-                            <button class="gumb-kosarica"><i>DODAJ</i></button>
+                            <span class="cena"><?=  $izdelek['cena'], 2 ?> €</span>
+							<form method="post" action="kosarica.php">
+								<input type="hidden" name="id_izdelka" value="<?= $izdelek['id_i'] ?>">
+								<button type="submit" name="dodaj_v_kosarico" class="gumb-kosarica">Dodaj</button>
+							</form>
 
                             <?php if (isset($_SESSION['id_p']) && $_SESSION['id_p'] == 2): ?>
                                 <a href="uredi_izdelek.php?id=<?= $izdelek['id_i'] ?>" class="gumb-kosarica" style="background-color: white; color: black;">

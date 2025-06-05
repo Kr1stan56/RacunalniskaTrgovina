@@ -15,6 +15,9 @@
     box-sizing: border-box;
     font-size: 14px; 
     position: relative;
+	background-color:rgba(87, 87, 87 ,0.3);
+	border-radius: 15px;
+
 }
 
 
@@ -33,7 +36,6 @@
 .opis-izdelka {
     color: #555;
     height: 60px;
-    overflow: hidden;
 }
 
 .sekcija-cene {

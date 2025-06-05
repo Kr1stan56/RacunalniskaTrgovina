@@ -17,22 +17,28 @@ if ($toggle % 2 !== 0) {
 			<div class="kategorije-box">
 			
 			    <?php if (isset($_SESSION['id_p']) && $_SESSION['id_p'] == 2): ?>
-				<a href="dodaj_kat.php" class="category-item " style="background-color:white;color:black;">+ Dodaj Kategorijo</a><br>
+				<a href="dodaj_kat.php" class="category-item " style="background-color:white;color:black;">+ Dodaj Kategorijo</a>
 				<?php endif; ?>
 				
-					<a href="?" class="category-item">Vse kategorije</a><br>
+				<a href="?" ><div class="category-item"s>
+					Vse kategorije	
+				</div>
+				</a>
 				<?php foreach ($kategorije as $kat): ?>
 				<div>
-					<a href="?kategorija=<?= $kat['id_ka'] ?>"class="category-item" >
-					   <?= htmlspecialchars($kat['ime']) ?>
+					<a href="?kategorija=<?= $kat['id_ka'] ?>" >
+						<div class="category-item"s>	
+							<?= htmlspecialchars($kat['ime']) ?>
+						</div>
 					</a>
-					
 					<?php if (isset($_SESSION['id_p']) && $_SESSION['id_p'] == 2): ?>
-					<a href="uredi_kat.php?id=<?= $kat['id_ka'] ?>"  class="category-item" style="background-color: white; color: black;">
-						<i>UREDI</i>
-					</a>
-					<?php endif; ?><br>
-				</div><br>
+						<a href="uredi_kat.php?id=<?= $kat['id_ka'] ?>" class="category-item" style="background-color: white; color: black;">
+							<i >UREDI</i>
+							
+						</a>
+
+					<?php endif; ?>
+				</div>
 				<?php endforeach; ?>
 			</div>
 		

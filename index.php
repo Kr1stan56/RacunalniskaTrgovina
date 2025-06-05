@@ -1,6 +1,22 @@
 <?php require_once 'baza.php'; ?>
 <?php include_once 'session.php'; ?>
+<?php
 
+    $stmt = $conn->prepare("
+       SELECT *
+		FROM izdelek
+		GROUP BY id_ka
+		LIMIT 5;
+
+
+    ");
+
+
+$stmt->execute();
+$izdelki = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+
+?>
 <!DOCTYPE html>
 <html lang="sl">
 <head>
@@ -9,55 +25,87 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Domov | Računalniška Trgovina</title>
 	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="css/header.css">
-	<link rel="stylesheet" href="css/footer.css">
+		<link rel="stylesheet" href="css/partials.css">	
+		<link rel="stylesheet" href="css/izdelki.css">
+
+		
+
 </head>
-<body class="domaca-stran">
+<body>
 
 	<main>
-		<section class="pozdravni-odsek">
+		<div class="pozdrav">
 			<h1>Dobrodošli v Računalniški Trgovini</h1>
 			<p>Vaša prva postaja za vso računalniško opremo in komponente</p>
-			<div class="gumbi-burger">
-				<a href="izdelki.php" class="gumb-burger">Oglejte si izdelke</a>
-				<a href="kontakt.php" class="gumb-burger">Kontaktirajte nas</a>
-			</div>
-		</section>
+			<a href="izdelki.php" class="gumb">Oglejte si izdelke</a>
+			<a href="kontakt.php" class="gumb">Kontaktirajte nas</a>
+		</div>
+		<div class="pozdrav-slika">
+		</div>
+		
 
-		<section class="prednosti">
-			<div class="prednost">
-				<i class=""></i>
+		<div class="odsek">
+			<div class="kartica">
 				<h3>Hitra Dostava</h3>
 				<p>Dostava v 24h po vsej Sloveniji</p>
 			</div>
-			<div class="prednost">
-				<i class=""></i>
+			<div class="kartica">
 				<h3>2+1 Garancija</h3>
 				<p>Podaljšana garancija za vse izdelke</p>
 			</div>
-			<div class="prednost">
-				<i class=""></i>
+			<div class="kartica">
 				<h3>Strokovno Svetovanje</h3>
 				<p>Brezplačno svetovanje naših strokovnjakov</p>
 			</div>
-		</section>
-		<section class="prednosti prednost2">
-			<div class="prednost">
-				<i class="AKCIJA">AKCIJA</i>
-				<h3>AKCIJA</h3>
-				<p>Vsi izdelki 10% off</p>
+		</div>
+
+		<div class="odsek">
+			<div class="kartica">
+				<p class="akcija">AKCIJA</p>
+				<h3>Popusti</h3>
+				<p>Vsi izdelki 10% ceneje</p>
 			</div>
-			<div class="prednost">
-				<i class="AKCIJA">AKCIJA</i>
-				<h3>AKCIJA</h3>
-				<p>blablabla</p>
+			<div class="kartica">
+				<p class="akcija">AKCIJA</p>
+				<h3>Pomladna Ponudba</h3>
+				<p>Izdelki po posebnih cenah</p>
 			</div>
-			<div class="prednost">
-				<i class="AKCIJA">AKCIJA</i>
-				<h3>AKCIJA</h3>
-				<p>blablabla</p>
+			<div class="kartica">
+				<p class="akcija">AKCIJA</p>
+				<h3>Zadnji Kosi</h3>
+				<p>Izkoristite popuste do razprodaje</p>
 			</div>
-		</section>
+		</div>
+		
+		<div class="odsek">
+		<h1>PRILJUBLJENI IZDELKI</h1>
+			<?php foreach ($izdelki as $izdelek): ?>
+                <div class="kartica-izdelka">
+                    <img src="<?= htmlspecialchars($izdelek['slika']) ?>" alt="<?= htmlspecialchars($izdelek['ime']) ?>" class="slika-izdelka">
+                    <div class="telo-kartice">
+                        <h3 class="naslov-izdelka"><?= htmlspecialchars($izdelek['ime']) ?></h3>
+                        <p class="opis-izdelka"><?= htmlspecialchars($izdelek['opis']) ?></p>
+                    </div>
+                    <div class="noga-kartice">
+                        <div class="sekcija-cene">
+                            <span class="cena"><?= number_format($izdelek['cena'], 2) ?> €</span>
+							<form method="post" action="kosarica.php">
+								<input type="hidden" name="id_izdelka" value="<?= $izdelek['id_i'] ?>">
+								<button type="submit" name="dodaj_v_kosarico" class="gumb-kosarica">Dodaj</button>
+
+							</form>
+
+                            <?php if (isset($_SESSION['id_p']) && $_SESSION['id_p'] == 2): ?>
+                                <a href="uredi_izdelek.php?id=<?= $izdelek['id_i'] ?>" class="gumb-kosarica" style="background-color: white; color: black;">
+                                    <i>UREDI</i>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                        <small class="zaloga">Na zalogi: <?= $izdelek['zaloga'] ?></small>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+		</div>
 	</main>
 
 	<?php include 'partials/footer.php'; ?>

@@ -1,0 +1,393 @@
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.logotip {
+    float: left;
+    margin-left: 20%;
+}
+
+.logotip img {
+    height: 40px;
+}
+
+.navigacija {
+    float: left;
+    margin-left: 40px;
+}
+
+.navigacijski-seznam a {
+    margin: 0;
+    padding: 0;
+text-decoration: none;
+}
+
+.navigacijski-seznam li {
+    float: left;
+    margin-right: 20px;
+}
+
+.navigacijski-seznam li a {
+    color: #fff;
+    font-weight: bold;
+	list-style-type: none;
+
+}
+
+.navigacijski-seznam li a:hover {
+    color: #4CAF50;
+}
+
+.uporabniske-akcije {
+    float: right;
+    margin-right: 20%;
+}
+
+.uporabnisko-ime {
+    font-weight: bold;
+    margin-right: 10px;
+}
+ul{
+		list-style-type: none;
+
+}
+.gumb-prijava,
+.gumb-odjava,
+.gumb-admin {
+    padding: 10px 16px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: background-color 0.2s ease;
+	text-decoration: none;
+
+}
+
+.gumb-odjava {
+    background-color: #f44336;
+    border-color: #f44336;
+}
+
+.gumb-admin {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+.ikona-kosarica {
+    float: right;
+    margin-right: 15px;
+}
+
+.kosarica-ikona {
+    width: 24px;
+    height: 24px;
+}
+
+.stevec-kosarice {
+    background: #f44336;
+    color: white;
+    border-radius: 50%;
+    padding: 1px 6px;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+.iskalnik-vsebina {
+    width: 100%;
+	overflow: hidden;
+}
+
+
+.iskalni-obrazec {
+    text-align: center;
+}
+
+.iskalno-polje {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 20px 0 0 20px;
+    width: 300px;
+}
+
+.gumb-iskanje {
+    padding: 8px 15px;
+    border: 1px solid #4CAF50;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+}
+.kategorija{
+	height: 34px; 
+	font-size: 13px; 
+	padding: 3px 12px;
+}
+
+.sidebar-gumb {
+    width: 280px; 
+    min-height: 100vh;
+	background-color:rgba(87, 87, 87 ,0.4);
+    position: relative;
+    overflow: hidden;
+    transition: width 0.3s ease;
+	
+}
+
+.sidebar-gumb.zaprt {
+    width: 25px; 
+	background-color: black;
+
+}
+
+.sidebar {
+    color: #e6e6e6;
+    padding: 25px 15px;
+    width: 255px; 
+    min-height: 100vh;
+
+	
+}
+
+.sidebar h3 {
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    color: #ffffff;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #2d4263;
+    letter-spacing: 1px;
+}
+
+.sidebar a {
+    color: #e6e6e6;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+	text-decoration: none;
+
+}
+
+
+
+.sidebar a.active {
+    background-color: #darkgrey;
+    color: white;
+    font-weight: 600;
+}
+
+.kategorije-box {
+    border: 2px solid gray;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: darkgrey;
+}
+
+.category-item {
+    width: 100%;
+    border: 1px solid #2d4263;
+    border-radius: 6px;
+    padding: 10px 15px;
+    background-color: rgba(87, 87, 87, 0.4);
+    margin-top: 10px;        
+    margin-bottom: 10px;  
+    box-sizing: border-box;   
+    transition: all 0.3s ease;
+    text-align: center;         
+}
+
+
+.category-item:hover {
+	background-color:rgba(100, 100,100 ,0.8);
+    border-color: black;
+}
+
+.zapri {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 25px;
+    height: 40px;
+    z-index: 10;
+}
+
+.zapri img {
+    width: 25px;
+    height: auto;
+    cursor: pointer;
+}
+
+.odpri {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 25px;
+    height: 40px;
+    z-index: 10;
+}
+
+.odpri img {
+    width: 25px;
+    height: auto;
+    cursor: pointer;
+}
+
+@media (max-width: 770px) {
+    .sidebar-gumb {
+        width: 100%;
+        float: none;
+        min-height: auto;
+    }
+
+    .sidebar-gumb.zaprt {
+        width: 25px;
+    }
+
+    .sidebar {
+		position:sticky;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .zapri, .odpri {
+        margin: 10px auto;
+        text-align: center;
+        transform: none;
+    }
+}
+
+.footer {
+    width: 100%;
+    background-color: #222;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    clear: both;
+}
+
+.noga-vsebina {
+    width: 100%;
+    overflow: hidden; 
+    margin-bottom: 20px;
+}
+
+.noga-blok {
+    float: left;
+    width: 23%;
+    margin-right: 2%;
+    box-sizing: border-box;
+}
+
+.noga-blok:last-child {
+    margin-right: 0;
+}
+
+.noga-blok h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.noga-blok p,
+.noga-blok ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    color: #ddd;
+}
+
+.kontaktni-podatki li,
+.hitre-povezave li {
+    margin-bottom: 8px;
+}
+
+.hitre-povezave li a {
+    color: #ddd;
+    text-decoration: none;
+}
+
+.hitre-povezave li a:hover {
+    color: #4CAF50;
+    text-decoration: underline;
+}
+
+.obrazec-novice {
+    margin-top: 10px;
+    overflow: hidden; 
+}
+
+.obrazec-novice input[type="email"] {
+    float: left;
+    width: 70%;
+    padding: 6px 8px;
+    border: none;
+    border-radius: 20px 0 0 20px;
+    box-sizing: border-box;
+}
+
+.obrazec-novice .gumb {
+    float: left;
+    width: 28%;
+    padding: 6px 0;
+    margin-left: 2%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.obrazec-novice .gumb:hover {
+    background-color: #0056b3;
+}
+
+.noga-spodaj {
+    width: 100%;
+    border-top: 1px solid #444;
+    padding-top: 15px;
+    position: relative;
+    overflow: hidden;
+    font-size: 13px;
+    color: #bbb;
+}
+
+.noga-spodaj p {
+    float: left;
+    margin: 0;
+    line-height: 24px;
+}
+
+.druzabne-ikone {
+    float: right;
+}
+
+.druzabne-ikone a {
+    color: #ddd;
+    margin-left: 12px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.druzabne-ikone a:hover {
+    color: #4CAF50;
+}
+
+
+
+
+

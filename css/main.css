@@ -1,213 +1,97 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #212121;
-	background-color = WHITE;
-	/*background: linear-gradient(to right, #3d3b3b, white);*/ 
-    line-height: 1.6;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	color: black;
+	background-color: white;
 }
 
 a {
-    text-decoration: none;
-    color: inherit;
+	text-decoration: none;
+	color: white;
 }
-
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-.stran {
-    min-height: 100vh;
+main{
+	margin-left:15%;
+	margin-right:15%;
+	margin-top:50px;
 }
 
 
-.glavna-vsebina {
-    padding: 2rem;
-    margin-left: 220px;
+.pozdrav-slika {
+	background-image: url('../images/burger.png');
+	background-size: 90%;
+	height:600px;
+}
+.pozdrav 
+ {
+	padding-bottom:20px;
+	color:black;
+	text-align: center;
 }
 
-.naslov-strani {
-    font-size: 2rem;
-    max-width: 85%;
-    margin: 0 auto 1.5rem;
-    padding-bottom: 0.5rem;
-    color: #2c3e50;
-    border-bottom: 1px solid #e0e0e0;
+.pozdrav h1 {
+	font-size: 2.5rem;
+	color: #0078d4;
+	margin-bottom: 20px;
+}
+div h1 {
+	font-size: 2.5rem;
+	color: #0078d4;
+	margin-bottom: 20px;
+}
+.pozdrav p {
+	font-size: 1.2rem;
+	color: black;
+	margin-bottom: 30px;
 }
 
-.pozdravni-odsek {
-    padding: 80px 20px;
-    text-align: center;
+.gumb {
+	background-color: #0078d4;
+	padding: 12px 24px;
+	margin: 5px;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-weight: bold;
+	transition: background-color 0.3s;
+	display: inline-block;
 }
 
-.pozdravni-odsek h1 {
-    font-size: 2.8rem;
-    margin-bottom: 16px;
-    color: #0078d4;
+.gumb:hover {
+	background-color: #005ea2;
 }
 
-.pozdravni-odsek p {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 32px;
+.odsek {
+	width: 90%;
+	margin: 40px auto;
+	overflow: hidden;
 }
 
-.gumbi-burger {
-    justify-content: center;
-    gap: 16px;
+.kartica {
+	width: 30%;
+	margin: 1.66%;
+	padding: 20px;
+	float: left;
+	text-align: center;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	background-color: #fafafa;
 }
 
-.gumb-burger {
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    background-color: #0078d4;
-    color: white;
-    transition: background-color 0.3s;
+.kartica h3 {
+	color: #222;
+	margin-bottom: 10px;
 }
 
-.gumb-burger:hover {
-    background-color: #005ea2;
+.kartica p {
+	color: #555;
 }
 
-.prednosti {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 40px 20px;
-    gap: 30px;
-}
-
-.prednost {
-    max-width: 300px;
-    text-align: center;
-    padding: 30px 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
-
-.prednost i {
-    font-size: 36px;
-    color: #0078d4;
-    margin-bottom: 10px;
-}
-
-.prednost h3 {
-    font-size: 1.2rem;
-    margin-bottom: 8px;
-    color: #222;
-}
-
-.prednost p {
-    color: #555;
-}
-
-.prednost2 {
-
-}
-
-
-.prednost2 .AKCIJA {
-    color: #dc3545;
-    font-weight: bold;
-    font-style: normal;
-}
-
-
-.gumb-primarni {
-    background-color: #007b00;
-    color: white;
-    border: 1px solid #006600;
-}
-
-.gumb-primarni:hover {
-    background-color: #005c00;
-}
-
-.gumb-sekundarni {
-    background-color: #6c757d;
-    color: white;
-    border: 1px solid #5a6268;
-}
-
-.gumb-sekundarni:hover {
-    background-color: #5a6268;
-}
-
-
-.vnos-polje {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-}
-
-@media (max-width: 1024px) {
-    .glavna-vsebina {
-        margin-left: 0;
-        padding: 1.5rem;
-    }
-    
-    .naslov-strani {
-        max-width: 95%;
-    }
-    
-    .pozdrawlni-odsek h1 {
-        font-size: 2.2rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .naslov-strani {
-        font-size: 1.75rem;
-    }
-    
-    .pozdrawlni-odsek {
-        padding: 60px 20px;
-    }
-    
-    .pozdrawlni-odsek h1 {
-        font-size: 2rem;
-    }
-    
-    .pozdrawlni-odsek p {
-        font-size: 1rem;
-    }
-    
-    .prednosti {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .glavna-vsebina {
-        padding: 1rem;
-    }
-    
-    .naslov-strani {
-        font-size: 1.5rem;
-    }
-    
-    .pozdrawlni-odsek {
-        padding: 40px 15px;
-    }
-    
-    .pozdrawlni-odsek h1 {
-        font-size: 1.8rem;
-    }
-    
-    .gumb-burger {
-        width: 100%;
-    }
+.akcija {
+	color: #dc3545;
+	font-weight: bold;
 }

@@ -1,4 +1,41 @@
 <?php include_once 'session.php'; ?>
+<?php require_once 'baza.php'; ?>
+
+<?php
+$izbrana_kategorija = null;
+$iskalnik = null;
+
+if (isset($_GET['kategorija']) && $_GET['kategorija'] !== '' && $_GET['kategorija'] !== 'vse') {
+    $izbrana_kategorija = intval($_GET['kategorija']);
+}
+
+if (isset($_GET['q']) && trim($_GET['q']) !== '') {
+    $iskalnik = '%' . trim($_GET['q']) . '%';
+}
+
+if ($iskalnik && $izbrana_kategorija !== null) {
+    $stmt = $conn->prepare("
+        SELECT * FROM izdelek 
+        WHERE (ime LIKE ? OR opis LIKE ?) AND id_ka = ?
+    ");
+    $stmt->bind_param("ssi", $iskalnik, $iskalnik, $izbrana_kategorija);
+
+} elseif ($iskalnik) {
+    $stmt = $conn->prepare("
+        SELECT * FROM izdelek 
+        WHERE ime LIKE ? OR opis LIKE ?
+    ");
+    $stmt->bind_param("ss", $iskalnik, $iskalnik);
+
+} elseif ($izbrana_kategorija !== null) {
+    $stmt = $conn->prepare("
+        SELECT * FROM izdelek 
+        WHERE id_ka = ?
+    ");
+    $stmt->bind_param("i", $izbrana_kategorija);
+
+}
+?>
 <header class="header">
     <div class="glava-vsebina">
         <div class="logotip">
@@ -11,8 +48,7 @@
             <ul class="navigacijski-seznam">
                 <li><a href="index.php">Domov</a></li>
                 <li><a href="izdelki.php">Izdelki</a></li>
-                <li><a href="o-nas.php">O nas</a></li>
-                <li><a href="kontakt.php">Kontakt</a></li>
+
             </ul>
         </nav>
 

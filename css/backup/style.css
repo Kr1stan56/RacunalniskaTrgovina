@@ -1,0 +1,110 @@
+/* Osnovni stil */
+body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #222;
+    padding: 20px;
+}
+
+/* Okvir obrazca */
+.okvir-obrazca {
+    width: 600px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 25px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+/* Naslov obrazca */
+.naslov-obrazca {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Ena vrstica obrazca */
+.vrstica {
+    margin-bottom: 15px;
+}
+
+/* Oznake */
+.oznaka {
+    font-weight: bold;
+    margin-bottom: 6px;
+    /* brez display: block; pustimo privzeto */
+}
+
+/* Polja */
+.vnosno-polje,
+.izbirno-polje,
+.besedilno-obmocje {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+/* Besedilno območje */
+.besedilno-obmocje {
+    height: 100px;
+    resize: vertical;
+}
+
+/* Gumb za oddajo */
+.gumb-oddaj {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background-color: #007acc;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.gumb-oddaj:hover {
+    background-color: #005a99;
+}
+
+.tabela-kosarica img {
+    width: 100px;         
+    height: auto;        
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .okvir-obrazca {
+        padding: 15px;
+    }
+
+    .naslov-obrazca {
+        font-size: 18px;
+    }
+
+    .vnosno-polje,
+    .izbirno-polje,
+    .besedilno-obmocje {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .gumb-oddaj {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
