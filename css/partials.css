@@ -387,7 +387,75 @@ ul{
     color: #4CAF50;
 }
 
+@media (max-width: 770px) {
+    .header {
+        text-align: center;
+        padding: 15px 0;
+        overflow: visible;
+    }
 
+    .logotip {
+        float: none;
+        margin: 0 auto 10px auto;
+        text-align: center;
+        width: 100%;
+    }
+
+    .navigacija {
+        float: none;
+        margin: 0 auto 10px auto;
+        text-align: center;
+        width: 100%;
+    }
+
+    .navigacijski-seznam li {
+        float: none;
+        margin: 8px auto;
+    }
+
+    .uporabniske-akcije {
+        float: none;
+        margin: 0 auto;
+        text-align: center;
+        width: 100%;
+    }
+
+    .gumb-prijava,
+    .gumb-odjava,
+    .gumb-admin {
+        width: 80%;
+        margin: 6px auto;
+        font-size: 15px;
+    }
+
+    .ikona-kosarica {
+        float: none;
+        margin: 10px auto;
+        text-align: center;
+    }
+
+    .iskalnik-vsebina {
+        overflow: visible;
+        margin: 20px auto;
+        text-align: center;
+        width: 90%;
+    }
+
+    .iskalni-obrazec {
+        text-align: center;
+    }
+
+    .iskalno-polje {
+        width: 60%;
+        max-width: 240px;
+        margin-bottom: 10px;
+    }
+
+    .gumb-iskanje {
+        width: 30%;
+        max-width: 100px;
+    }
+}
 
 
 
