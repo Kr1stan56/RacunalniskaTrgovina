@@ -1,5 +1,4 @@
 <?php
-// Povezava z bazo podatkov (prilagodite glede na vaš lokalni setup)
 $host = 'localhost';
 $dbname = 'trgovina';
 $username = 'root';
