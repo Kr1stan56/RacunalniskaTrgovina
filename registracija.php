@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registracija'])) {
         <?php endif; ?>
 
         <?php if ($uspeh): ?>
-            <div style="color: green; margin-bottom: 15px;"><?= htmlspecialchars($uspeh) ?></div>
+            <div style="color: green; margin-bottom: 15px;"><?= $uspeh ?></div>
         <?php endif; ?>
 
         <form method="post">

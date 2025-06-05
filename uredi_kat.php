@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <form method="post">
         <label>Ime kategorije:</label>
-        <input type="text" name="ime" value="<?= htmlspecialchars($ime) ?>" required><br>
+        <input type="text" name="ime" value="<?= $ime ?>" required><br>
 
         <button type="submit" name="shrani">Shrani spremembe</button>
         <button type="submit" name="odstrani">Odstrani kategorijo</button>
