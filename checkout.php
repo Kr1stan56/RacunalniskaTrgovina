@@ -74,6 +74,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($napake)) {
         $uspesno = true;
     }
+if ($uspesno) {
+
+	$stmt = $conn->prepare("
+		INSERT INTO narocila (id_u, nacin_placila, naslov_dostave, skupna_cena)
+		VALUES (?, ?, ?, ?)");
+	$stmt->bind_param("issd", $id_u , $nacin_placila, $naslov_dostave, $skupnaCena);
+
+    if ($stmt->execute()) {
+        $id_narocila = $stmt->insert_id;
+
+        $stmt_postavka = $conn->prepare("
+            INSERT INTO postavke_narocila (id_n, id_i, kolicina, cena_ob_nakupu)
+            VALUES (?, ?, ?, ?)");
+
+		
+        foreach ($izdelki as $izdelek) {
+            $stmt_id = $conn->prepare("SELECT id_i FROM izdelek WHERE ime = ?");
+            $stmt_id->bind_param("s", $izdelek['ime']);
+            $stmt_id->execute();
+            $result_id = $stmt_id->get_result();
+            $row_id = $result_id->fetch_assoc();
+            $id_izdelka = $row_id['id_i'] ?? null;
+
+            if ($id_izdelka) {
+                $stmt_postavka->bind_param("iiid", $id_narocila, $id_izdelka, $izdelek['kolicina'], $izdelek['cena_ob_nakupu']);
+                $stmt_postavka->execute();
+				
+				
+				
+				
+				
+				$stmt_zaloga = $conn->prepare("
+					UPDATE izdelek
+					SET zaloga = zaloga - ? 
+					WHERE id_i = ?");
+				$stmt_zaloga->bind_param("ii", $izdelek['kolicina'], $id_izdelka);
+				$stmt_zaloga->execute();
+            }
+        }
+		
+        $stmt = $conn->prepare("DELETE FROM postavke_kosarice WHERE id_k = ?");
+        $stmt->bind_param("i", $id_kosarice);
+        $stmt->execute();
+
+        $uspesno = true;
+        $izdelki = [];
+		header("Location: index.php");
+		exit;
+
+    } else {
+        $napake[] = "Napaka.";
+    }
+}
+	
 }
 ?>
 
