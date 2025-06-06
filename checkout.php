@@ -1,4 +1,9 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 include_once 'session.php';
 require_once 'baza.php';
 
@@ -120,8 +125,7 @@ if ($uspesno) {
 
         $uspesno = true;
         $izdelki = [];
-		header("Location: index.php");
-		exit;
+		header("Refresh: 2; URL=index.php");
 
     } else {
         $napake[] = "Napaka.";
@@ -161,7 +165,7 @@ if ($uspesno) {
                             <?php echo $izdelek['ime']; ?>
                         </td>
                         <td rowspan="2" style="font-weight: bold; padding: 8px; text-align: right;">
-                            <?php echo number_format($izdelek['kolicina'] * $izdelek['cena_ob_nakupu'], 2); ?> €
+                            <?php echo $izdelek['kolicina'] * $izdelek['cena_ob_nakupu']; ?> €
                         </td>
                     </tr>
                     <tr>
@@ -176,7 +180,7 @@ if ($uspesno) {
 
     <div>
         <h2>Povzetek</h2>
-        <p>Skupna cena: <strong><?php echo number_format($skupnaCena, 2); ?> €</strong></p>
+        <p>Skupna cena: <strong><?php echo $skupnaCena; ?> €</strong></p>
 
         <?php if (!empty($napake)) { ?>
             <div style="color: red;">

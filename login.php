@@ -35,10 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['prijava'])) {
 				$uspeh = "Uspešna prijava! Pozdravljeni, " . $_SESSION['ime'] . " " . $_SESSION['priimek'];
 				header("Refresh: 1; URL=index.php");
 			}else {
-                throw new Exception("Napačno geslo");
+                $napaka =("Napačno geslo");//ali throw new Exception
             }
         } else {
-            throw new Exception("Uporabnik s tem e-poštnim naslovom ne obstaja");
+            $napaka = ("Uporabnik s tem e-poštnim naslovom ne obstaja");
         }
     } catch (Exception $e) {
         $napaka = $e->getMessage();

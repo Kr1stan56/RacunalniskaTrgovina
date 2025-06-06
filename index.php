@@ -6,16 +6,17 @@
        SELECT *
 		FROM izdelek
 		GROUP BY id_ka
-		LIMIT 5;
+		LIMIT 8;
 
 
     ");
 
 
 $stmt->execute();
-$izdelki = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 
+$resultat = $stmt->get_result();
+$izdelki = $resultat->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="sl">
