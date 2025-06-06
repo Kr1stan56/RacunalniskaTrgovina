@@ -3,6 +3,7 @@ require_once 'baza.php';
 
 $napaka = '';
 $uspeh = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $geslo = $_POST['geslo'] ?? '';
@@ -12,17 +13,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $napaka = "Gesli se ne ujemata.";
     } else {
         $hash = sha1($geslo);
-        $stmt = $conn->prepare("UPDATE uporabniki SET geslo = ? WHERE email = ?");
-        $stmt->bind_param("ss", $hash, $email);
-        if ($stmt->execute() && $stmt->affected_rows > 0) {
+
+        $stmt = mysqli_prepare($conn, "UPDATE uporabniki SET geslo = ? WHERE email = ?");
+        mysqli_stmt_bind_param($stmt, "ss", $hash, $email);
+
+        if (mysqli_stmt_execute($stmt) && mysqli_stmt_affected_rows($stmt) > 0) {
             $uspeh = "Geslo uspešno posodobljeno.";
         } else {
             $napaka = "Napaka ali uporabnik ne obstaja.";
         }
+
+        mysqli_stmt_close($stmt);
     }
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="sl">

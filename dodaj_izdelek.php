@@ -2,17 +2,17 @@
 require_once 'baza.php';
 include_once 'session.php';
 
-// Dovoli samo adminom
 if (!isset($_SESSION['id_p']) || $_SESSION['id_p'] != 2) {
     header("Location: index.php");
     exit;
 }
 
-// Preberi kategorije iz baze za dropdown
 $kategorije = [];
-$result = $conn->query("SELECT id_ka, ime FROM kategorije ORDER BY ime");
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
+$sql_kat = "SELECT id_ka, ime FROM kategorije ORDER BY ime";
+$result = mysqli_query($conn, $sql_kat);
+
+if ($result && mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
         $kategorije[] = $row;
     }
 }
@@ -25,14 +25,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['shrani'])) {
     $url_slike = trim($_POST['url_slike']);
     $id_kategorije = intval($_POST['kategorija']);
 
-    $stmt = $conn->prepare("INSERT INTO izdelek (ime, opis, cena, zaloga, slika, id_ka) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssdiii", $ime, $opis, $cena, $zaloga, $url_slike, $id_kategorije);
-    $stmt->execute();
+    $stmt = mysqli_prepare($conn, "INSERT INTO izdelek (ime, opis, cena, zaloga, slika, id_ka) VALUES (?, ?, ?, ?, ?, ?)");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "ssdiii", $ime, $opis, $cena, $zaloga, $url_slike, $id_kategorije);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
 
     header("Location: izdelki.php");
     exit;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="sl">

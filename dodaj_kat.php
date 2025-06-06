@@ -11,15 +11,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['shrani'])) {
     $ime = trim($_POST['ime']);
 
     if (!empty($ime)) {
-        $stmt = $conn->prepare("INSERT INTO kategorije (ime) VALUES (?)");
-        $stmt->bind_param("s", $ime);
-        $stmt->execute();
+        $stmt = mysqli_prepare($conn, "INSERT INTO kategorije (ime) VALUES (?)");
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "s", $ime);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+        }
 
         header("Location: izdelki.php");
         exit;
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="sl">

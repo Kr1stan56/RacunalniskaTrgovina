@@ -12,42 +12,35 @@ if (isset($_GET['kategorija']) && $_GET['kategorija'] !== '' && $_GET['kategorij
 if (isset($_GET['q']) && trim($_GET['q']) !== '') {
     $iskalnik = '%' . trim($_GET['q']) . '%';
 }
-
 if ($iskalnik && $izbrana_kategorija !== null) {
-    $stmt = $conn->prepare("
+    $stmt = mysqli_prepare($conn, "
         SELECT * FROM izdelek 
-        WHERE (ime LIKE ? OR opis LIKE ?) AND id_ka = ?
-    ");
-    $stmt->bind_param("ssi", $iskalnik, $iskalnik, $izbrana_kategorija);
-
+        WHERE (ime LIKE ? OR opis LIKE ?) AND id_ka = ?");
+    mysqli_stmt_bind_param($stmt, "ssi", $iskalnik, $iskalnik, $izbrana_kategorija);
 } elseif ($iskalnik) {
-    $stmt = $conn->prepare("
+    $stmt = mysqli_prepare($conn, "
         SELECT * FROM izdelek 
-        WHERE ime LIKE ? OR opis LIKE ?
-    ");
-    $stmt->bind_param("ss", $iskalnik, $iskalnik);
-
+        WHERE ime LIKE ? OR opis LIKE ?");
+    mysqli_stmt_bind_param($stmt, "ss", $iskalnik, $iskalnik);
 } elseif ($izbrana_kategorija !== null) {
-    $stmt = $conn->prepare("
+    $stmt = mysqli_prepare($conn, "
         SELECT * FROM izdelek 
-        WHERE id_ka = ?
-    ");
-    $stmt->bind_param("i", $izbrana_kategorija);
-
+        WHERE id_ka = ?");
+    mysqli_stmt_bind_param($stmt, "i", $izbrana_kategorija);
 } else {
-    $stmt = $conn->prepare("
-       SELECT *
-	   FROM izdelek
-		
-    ");
+    $stmt = mysqli_prepare($conn, "SELECT * FROM izdelek");
 }
 
-$stmt->execute();
-$izdelki = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+mysqli_stmt_execute($stmt);
+$rezultat = mysqli_stmt_get_result($stmt);
+$izdelki = mysqli_fetch_all($rezultat, MYSQLI_ASSOC);
+mysqli_stmt_close($stmt);
 
-$stmt = $conn->prepare("SELECT * FROM kategorije");
-$stmt->execute();
-$kategorije = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt_kat = mysqli_prepare($conn, "SELECT * FROM kategorije");
+mysqli_stmt_execute($stmt_kat);
+$rezultat_kat = mysqli_stmt_get_result($stmt_kat);
+$kategorije = mysqli_fetch_all($rezultat_kat, MYSQLI_ASSOC);
+mysqli_stmt_close($stmt_kat);
 ?>
 
 <!DOCTYPE html>

@@ -7,43 +7,52 @@ $uspeh = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registracija'])) {
     try {
-        $ime = $_POST['ime'];
-        $priimek = $_POST['priimek'];
-        $email = $_POST['email'];
+        $ime = trim($_POST['ime']);
+        $priimek = trim($_POST['priimek']);
+        $email = trim($_POST['email']);
         $geslo = $_POST['geslo'];
-        $naslov = $_POST['naslov'];
+        $naslov = trim($_POST['naslov']);
 
         if (empty($ime) || empty($priimek) || empty($email) || empty($geslo) || empty($naslov)) {
             throw new Exception("Vsa polja so obvezna.");
         }
 
-        $stmt = $conn->prepare("SELECT id_u FROM uporabniki WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $rez = $stmt->get_result();
-        if ($rez->num_rows > 0) {
-            $napaka[] = ("E-pošta je že v uporabi.");
+        // Preveri, ali e-pošta že obstaja
+        $stmt = mysqli_prepare($conn, "SELECT id_u FROM uporabniki WHERE email = ?");
+        mysqli_stmt_bind_param($stmt, "s", $email);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+
+        if (mysqli_stmt_num_rows($stmt) > 0) {
+            $napaka[] = "E-pošta je že v uporabi.";
         }
 
-        $hashed_geslo = sha1($geslo);
+        mysqli_stmt_close($stmt);
 
-        $id_p = 1;
+        if (empty($napaka)) {
+            $hashed_geslo = sha1($geslo);
+            $id_p = 1;
 
-        $stmt = $conn->prepare("INSERT INTO uporabniki (ime, priimek, email, geslo, naslov, datum_registracije, id_p)
-                                VALUES (?, ?, ?, ?, ?, NOW(), ?)");
-        $stmt->bind_param("sssssi", $ime, $priimek, $email, $hashed_geslo, $naslov, $id_p);
+            $stmt = mysqli_prepare($conn, "INSERT INTO uporabniki (ime, priimek, email, geslo, naslov, datum_registracije, id_p) 
+                                           VALUES (?, ?, ?, ?, ?, NOW(), ?)");
+            mysqli_stmt_bind_param($stmt, "sssssi", $ime, $priimek, $email, $hashed_geslo, $naslov, $id_p);
 
-        if ($stmt->execute()) {
-            $uspeh = "Registracija uspešna! Lahko se prijavite.";
-            header("Refresh: 3; URL=login.php");
-        } else {
-            throw new Exception("Napaka pri registraciji.");
+            if (mysqli_stmt_execute($stmt)) {
+                $uspeh = "Registracija uspešna! Lahko se prijavite.";
+                header("Refresh: 3; URL=login.php");
+            } else {
+                throw new Exception("Napaka pri registraciji.");
+            }
+
+            mysqli_stmt_close($stmt);
         }
 
     } catch (Exception $e) {
-        $napaka = $e->getMessage();
+        $napaka[] = $e->getMessage();
     }
 }
+?>
+
 ?>
 <!DOCTYPE html>
 <html lang="sl">

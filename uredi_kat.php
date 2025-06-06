@@ -7,33 +7,35 @@ if (!isset($_SESSION['id_p']) || $_SESSION['id_p'] != 2) {
     exit;
 }
 
-
-
 $id = intval($_GET['id']);
 
-$stmt = $conn->prepare("SELECT ime FROM kategorije WHERE id_ka = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$stmt->bind_result($ime);
-$stmt->fetch();
-$stmt->close();
+$stmt = mysqli_prepare($conn, "SELECT ime FROM kategorije WHERE id_ka = ?");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+mysqli_stmt_bind_result($stmt, $ime);
+mysqli_stmt_fetch($stmt);
+mysqli_stmt_close($stmt);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['shrani'])) {
         $novo_ime = trim($_POST['ime']);
         if (!empty($novo_ime)) {
-            $stmt = $conn->prepare("UPDATE kategorije SET ime = ? WHERE id_ka = ?");
-            $stmt->bind_param("si", $novo_ime, $id);
-            $stmt->execute();
+            $stmt = mysqli_prepare($conn, "UPDATE kategorije SET ime = ? WHERE id_ka = ?");
+            mysqli_stmt_bind_param($stmt, "si", $novo_ime, $id);
+            mysqli_stmt_execute($stmt);
+			mysqli_stmt_close($stmt);
+
             header("Location: izdelki.php");
             exit;
         }
     }
 
     if (isset($_POST['odstrani'])) {
-        $stmt = $conn->prepare("DELETE FROM kategorije WHERE id_ka = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
+        $stmt = mysqli_prepare($conn, "DELETE FROM kategorije WHERE id_ka = ?");
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+
         header("Location: izdelki.php");
         exit;
     }

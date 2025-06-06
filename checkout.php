@@ -3,9 +3,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 include_once 'session.php';
-require_once 'baza.php';
+require_once 'baza.php'; 
 
 if (!isset($_SESSION['prijavljen']) || $_SESSION['prijavljen'] !== true) {
     header("Location: login.php");
@@ -14,31 +13,29 @@ if (!isset($_SESSION['prijavljen']) || $_SESSION['prijavljen'] !== true) {
 
 $id_u = $_SESSION['id_uporabnika'];
 
-$stmt = $conn->prepare("SELECT id_k FROM uporabniki WHERE id_u = ?");
-$stmt->bind_param("i", $id_u);
-$stmt->execute();
-$result = $stmt->get_result();
-$row = $result->fetch_assoc();
+$sql = "SELECT id_k FROM uporabniki WHERE id_u = ?";
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, "i", $id_u);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$row = mysqli_fetch_assoc($result);
 
-if ($row && isset($row['id_k'])) {
-    $id_kosarice = $row['id_k'];
-} else {
-    $id_kosarice = null;
-}
+$id_kosarice = $row['id_k'] ?? null;
 
 $izdelki = [];
 $skupnaCena = 0;
 
 if ($id_kosarice !== null) {
-    $stmt = $conn->prepare("
+    $sql = "
         SELECT pk.kolicina, pk.cena_ob_nakupu, i.ime, i.slika 
         FROM postavke_kosarice pk
         JOIN izdelek i ON pk.id_i = i.id_i
-        WHERE pk.id_k = ?");
-    $stmt->bind_param("i", $id_kosarice);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $izdelki = $result->fetch_all(MYSQLI_ASSOC);
+        WHERE pk.id_k = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $id_kosarice);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $izdelki = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     foreach ($izdelki as $izdelek) {
         $skupnaCena += $izdelek['kolicina'] * $izdelek['cena_ob_nakupu'];
@@ -49,88 +46,75 @@ $napake = [];
 $uspesno = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nacin_placila = isset($_POST['nacin_placila']) ? $_POST['nacin_placila'] : '';
-    $stevilka_kartice = isset($_POST['stevilka_kartice']) ? trim($_POST['stevilka_kartice']) : '';
-    $mesec = isset($_POST['mesec']) ? $_POST['mesec'] : '';
-    $leto = isset($_POST['leto']) ? $_POST['leto'] : '';
-    $cvc = isset($_POST['cvc']) ? trim($_POST['cvc']) : '';
-    $naslov_dostave = isset($_POST['naslov_dostave']) ? trim($_POST['naslov_dostave']) : '';
+    $nacin_placila = $_POST['nacin_placila'] ?? '';
+    $stevilka_kartice = trim($_POST['stevilka_kartice'] ?? '');
+    $mesec = $_POST['mesec'] ?? '';
+    $leto = $_POST['leto'] ?? '';
+    $cvc = trim($_POST['cvc'] ?? '');
+    $naslov_dostave = trim($_POST['naslov_dostave'] ?? '');
 
-    if (empty($nacin_placila)) {
-        $napake[] = "Izbrati morate način plačila.";
-    }
-
+    if (empty($nacin_placila)) $napake[] = "Izbrati morate način plačila.";
     if ($nacin_placila === "kartica") {
-        if (empty($stevilka_kartice)) {
-            $napake[] = "Številka kartice ni vpisana.";
-        }
-        if (empty($mesec) || empty($leto)) {
-            $napake[] = "Datum poteka kartice ni vpisan.";
-        }
-        if (empty($cvc)) {
-            $napake[] = "CVC ni vpisan.";
-        }
+        if (empty($stevilka_kartice)) $napake[] = "Številka kartice ni vpisana.";
+        if (empty($mesec) || empty($leto)) $napake[] = "Datum poteka kartice ni vpisan.";
+        if (empty($cvc)) $napake[] = "CVC ni vpisan.";
     }
-
-    if (empty($naslov_dostave)) {
-        $napake[] = "Naslov dostave je obvezen.";
-    }
+    if (empty($naslov_dostave)) $napake[] = "Naslov dostave je obvezen.";
 
     if (empty($napake)) {
         $uspesno = true;
     }
-if ($uspesno) {
 
-	$stmt = $conn->prepare("
-		INSERT INTO narocila (id_u, nacin_placila, naslov_dostave, skupna_cena)
-		VALUES (?, ?, ?, ?)");
-	$stmt->bind_param("issd", $id_u , $nacin_placila, $naslov_dostave, $skupnaCena);
+    if ($uspesno) {
+        $sql = "
+            INSERT INTO narocila (id_u, nacin_placila, naslov_dostave, skupna_cena)
+            VALUES (?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "issd", $id_u, $nacin_placila, $naslov_dostave, $skupnaCena);
 
-    if ($stmt->execute()) {
-        $id_narocila = $stmt->insert_id;
+        if (mysqli_stmt_execute($stmt)) {
+            $id_narocila = mysqli_insert_id($conn);
 
-        $stmt_postavka = $conn->prepare("
-            INSERT INTO postavke_narocila (id_n, id_i, kolicina, cena_ob_nakupu)
-            VALUES (?, ?, ?, ?)");
+            $sql_postavka = "
+                INSERT INTO postavke_narocila (id_n, id_i, kolicina, cena_ob_nakupu)
+                VALUES (?, ?, ?, ?)";
+            $stmt_postavka = mysqli_prepare($conn, $sql_postavka);
 
-		
-        foreach ($izdelki as $izdelek) {
-            $stmt_id = $conn->prepare("SELECT id_i FROM izdelek WHERE ime = ?");
-            $stmt_id->bind_param("s", $izdelek['ime']);
-            $stmt_id->execute();
-            $result_id = $stmt_id->get_result();
-            $row_id = $result_id->fetch_assoc();
-            $id_izdelka = $row_id['id_i'];
+            foreach ($izdelki as $izdelek) {
+                $sql_id = "SELECT id_i FROM izdelek WHERE ime = ?";
+                $stmt_id = mysqli_prepare($conn, $sql_id);
+                mysqli_stmt_bind_param($stmt_id, "s", $izdelek['ime']);
+                mysqli_stmt_execute($stmt_id);
+                $result_id = mysqli_stmt_get_result($stmt_id);
+                $row_id = mysqli_fetch_assoc($result_id);
+                $id_izdelka = $row_id['id_i'] ?? null;
 
-            if ($id_izdelka) {
-                $stmt_postavka->bind_param("iiid", $id_narocila, $id_izdelka, $izdelek['kolicina'], $izdelek['cena_ob_nakupu']);
-                $stmt_postavka->execute();
-				
-				
-				
-				
-				
-				$stmt_zaloga = $conn->prepare("
-					UPDATE izdelek
-					SET zaloga = zaloga - ? 
-					WHERE id_i = ?");
-				$stmt_zaloga->bind_param("ii", $izdelek['kolicina'], $id_izdelka);
-				$stmt_zaloga->execute();
+                if ($id_izdelka) {
+                    mysqli_stmt_bind_param($stmt_postavka, "iiid", $id_narocila, $id_izdelka, $izdelek['kolicina'], $izdelek['cena_ob_nakupu']);
+                    mysqli_stmt_execute($stmt_postavka);
+
+                    $sql_zaloga = "
+                        UPDATE izdelek
+                        SET zaloga = zaloga - ?
+                        WHERE id_i = ?";
+                    $stmt_zaloga = mysqli_prepare($conn, $sql_zaloga);
+                    mysqli_stmt_bind_param($stmt_zaloga, "ii", $izdelek['kolicina'], $id_izdelka);
+                    mysqli_stmt_execute($stmt_zaloga);
+                }
             }
+
+            $sql = "DELETE FROM postavke_kosarice WHERE id_k = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "i", $id_kosarice);
+            mysqli_stmt_execute($stmt);
+
+            $izdelki = [];
+            header("Refresh: 2; URL=index.php");
+
+        } else {
+            $napake[] = "Napaka pri vnosu naročila.";
         }
-		
-        $stmt = $conn->prepare("DELETE FROM postavke_kosarice WHERE id_k = ?");
-        $stmt->bind_param("i", $id_kosarice);
-        $stmt->execute();
-
-        $izdelki = [];
-		header("Refresh: 2; URL=index.php");
-
-    } else {
-        $napake[] = "Napaka.";
     }
-}
-	
 }
 ?>
 
