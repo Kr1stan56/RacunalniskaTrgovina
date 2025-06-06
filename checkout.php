@@ -100,7 +100,7 @@ if ($uspesno) {
             $stmt_id->execute();
             $result_id = $stmt_id->get_result();
             $row_id = $result_id->fetch_assoc();
-            $id_izdelka = $row_id['id_i'] ?? null;
+            $id_izdelka = $row_id['id_i'];
 
             if ($id_izdelka) {
                 $stmt_postavka->bind_param("iiid", $id_narocila, $id_izdelka, $izdelek['kolicina'], $izdelek['cena_ob_nakupu']);
@@ -123,7 +123,6 @@ if ($uspesno) {
         $stmt->bind_param("i", $id_kosarice);
         $stmt->execute();
 
-        $uspesno = true;
         $izdelki = [];
 		header("Refresh: 2; URL=index.php");
 

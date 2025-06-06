@@ -65,8 +65,7 @@ $kategorije = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <?php include 'partials/sidebar.php'; ?>
     
     <main class="glavna-vsebina">
-        <h1 class="naslov-strani">Naši izdelki</h1>
-
+		<h1 class="naslov-strani" >Naši izdelki</h1>
  
 
         <div class="mreza-izdelkov">
@@ -97,7 +96,7 @@ $kategorije = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 					
                     <div class="noga-kartice">
                         <div class="sekcija-cene">
-                            <span class="cena"><?=  $izdelek['cena'], 2 ?> €</span>
+                            <span class="cena"><?=  $izdelek['cena'] ?> €</span>
 							<form method="post" action="kosarica.php">
 								<input type="hidden" name="id_izdelka" value="<?= $izdelek['id_i'] ?>">
 								<button type="submit" name="dodaj_v_kosarico" class="gumb-kosarica">Dodaj</button>
