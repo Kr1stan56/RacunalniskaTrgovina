@@ -73,7 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($napake)) {
         $uspesno = true;
-        // Tu lahko dodaš kodo za shranjevanje naročila
     }
 }
 ?>
