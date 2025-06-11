@@ -8,7 +8,7 @@ if (!isset($_SESSION['id_p']) || $_SESSION['id_p'] != 2) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['odstrani_id'])) {
-    $id_odstrani = intval($_POST['odstrani_id']);
+    $id_odstrani = $_POST['odstrani_id'];
     if ($id_odstrani > 0) {
         $stmt = mysqli_prepare($conn, "DELETE FROM uporabniki WHERE id_u = ?");
         mysqli_stmt_bind_param($stmt, "i", $id_odstrani);

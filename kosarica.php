@@ -12,8 +12,10 @@ $id_u = $_SESSION['id_uporabnika'];
 $stmt = mysqli_prepare($conn, "SELECT id_k FROM uporabniki WHERE id_u = ?");
 mysqli_stmt_bind_param($stmt, "i", $id_u);
 mysqli_stmt_execute($stmt);
+
 $result = mysqli_stmt_get_result($stmt);
 $row = mysqli_fetch_assoc($result);
+
 mysqli_stmt_close($stmt);
 
 if ($row && $row['id_k']) {
@@ -21,7 +23,8 @@ if ($row && $row['id_k']) {
 } else {
     $stmt = mysqli_prepare($conn, "INSERT INTO kosarica (datum_ustvarjanja, status) VALUES (CURDATE(), 1)");
     mysqli_stmt_execute($stmt);
-    $id_kosarice = mysqli_insert_id($conn);
+	
+    $id_kosarice = mysqli_insert_id($conn);//vrne zadnji vnesen id iz uporabnikove povezave conn
     mysqli_stmt_close($stmt);
 
     $stmt = mysqli_prepare($conn, "UPDATE uporabniki SET id_k = ? WHERE id_u = ?");
@@ -30,8 +33,8 @@ if ($row && $row['id_k']) {
     mysqli_stmt_close($stmt);
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dodaj_v_kosarico'])) {
-    $id_izdelka = intval($_POST['id_izdelka']);
+if (isset($_POST['dodaj_v_kosarico'])) {
+    $id_izdelka = $_POST['id_izdelka'];
     $kolicina = 1;
 
     $stmt = mysqli_prepare($conn, "SELECT id_po_ko, kolicina FROM postavke_kosarice WHERE id_k = ? AND id_i = ?");
@@ -51,7 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dodaj_v_kosarico'])) 
         $stmt = mysqli_prepare($conn, "SELECT cena FROM izdelek WHERE id_i = ?");
         mysqli_stmt_bind_param($stmt, "i", $id_izdelka);
         mysqli_stmt_execute($stmt);
-        $res = mysqli_stmt_get_result($stmt);
+		
+        $res = mysqli_stmt_get_result($stmt);//mysqli_stmt_bind_result($stmt, $cena)
         $row = mysqli_fetch_assoc($res);
         mysqli_stmt_close($stmt);
 
@@ -77,8 +81,14 @@ $stmt = mysqli_prepare($conn, "SELECT pk.kolicina, pk.cena_ob_nakupu, i.ime, i.s
                                WHERE pk.id_k = ?");
 mysqli_stmt_bind_param($stmt, "i", $id_kosarice);
 mysqli_stmt_execute($stmt);
+
 $result = mysqli_stmt_get_result($stmt);
-$izdelki = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+$izdelki = [];
+while ($vrstica = mysqli_fetch_assoc($result)) {
+    $izdelki[] = $vrstica;
+}
+
 mysqli_stmt_close($stmt);
 
 $skupnaCena = 0;
@@ -104,7 +114,7 @@ $_SESSION['id_k'] = $id_kosarice;
     <h1>Tvoja košarica</h1>
 
     <div>
-        <?php if (empty($izdelki)): ?>
+        <?php if (!isset($izdelki)): ?>
             <p>Košarica je prazna.</p>
         <?php else: ?>
             <table style="width:100%;">

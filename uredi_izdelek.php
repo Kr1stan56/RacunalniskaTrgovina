@@ -13,57 +13,103 @@ if (!$id_izdelka) {
     exit;
 }
 
+//najde vse kategorije id ter ime tega izdelka
 $kategorije = [];
-$result = mysqli_query($conn, "SELECT id_ka, ime FROM kategorije ORDER BY ime");
-if ($result) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $kategorije[] = $row;
+$stmt = mysqli_prepare($conn, "SELECT id_ka, ime FROM kategorije ORDER BY ime");
+if ($stmt) {
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {//eno vrstico posebej shranjuje v rov 
+            $kategorije[] = $row;//row se shranjuje v zadnjo mesto v kategorijah
+        }
     }
+    mysqli_stmt_close($stmt);
+} 
+
+
+
+
+
+if (isset($_POST['shrani'])) {
+	
+    if (isset($_POST['ime'])) {
+        $ime = trim($_POST['ime']);
+    } else {
+        $ime = '';
+    }
+    if (isset($_POST['opis'])) {
+        $opis = trim($_POST['opis']);
+    } else {
+        $opis = '';
+    }
+    if (isset($_POST['cena'])) {
+        $cena = trim($_POST['cena']);
+    } else {
+        $cena = '0';
+    }
+    if (isset($_POST['zaloga'])) {
+        $zaloga = trim($_POST['zaloga']);
+    } else {
+        $zaloga = '0';
+    }
+    if (isset($_POST['kategorija'])) {
+        $kategorija = trim($_POST['kategorija']);
+    } else {
+        $kategorija = '0';
+    }
+	
+	$stmt = mysqli_prepare($conn, "
+		UPDATE izdelek
+		SET ime = ?, opis = ?, cena = ?, zaloga = ?, id_ka = ?
+		WHERE id_i = ?
+	");
+	mysqli_stmt_bind_param($stmt, "ssdiii", $ime, $opis, $cena, $zaloga, $kategorija, $id_izdelka);
+	mysqli_stmt_execute($stmt);
+	mysqli_stmt_close($stmt);
+
+	header("Location: uredi_izdelek.php?id=" . $id_izdelka);
+	exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if (isset($_POST['shrani'])) {
-        $ime = mysqli_real_escape_string($conn, $_POST['ime'] ?? '');
-        $opis = mysqli_real_escape_string($conn, $_POST['opis'] ?? '');
-        $cena = floatval($_POST['cena'] ?? 0);
-        $zaloga = intval($_POST['zaloga'] ?? 0);
-        $kategorija = intval($_POST['kategorija'] ?? 0);
 
-        $query = "
-            UPDATE izdelek
-            SET ime = '$ime', opis = '$opis', cena = $cena, zaloga = $zaloga, id_ka = $kategorija
-            WHERE id_i = $id_izdelka
-        ";
-        mysqli_query($conn, $query);
+if (isset($_POST['zamenjaj_sliko'])) {
+	
+	if (isset($_POST['url_slike'])) {
+		$url_slike = trim($_POST['url_slike']);
+	} else {
+		$url_slike = '';
+	}
+	
+	$stmt = $conn->prepare("UPDATE izdelek SET slika = ? WHERE id_i = ?");
+	$stmt->bind_param("si", $url_slike, $id_izdelka);
+	$stmt->execute();
 
-        header("Location: uredi_izdelek.php?id=" . urlencode($id_izdelka));
-        exit;
-    }
+    mysqli_query($conn, $query);
 
-    if (isset($_POST['zamenjaj_sliko'])) {
-        $url_slike = mysqli_real_escape_string($conn, trim($_POST['url_slike'] ?? ''));
-        $query = "UPDATE izdelek SET slika = '$url_slike' WHERE id_i = $id_izdelka";
-        mysqli_query($conn, $query);
-
-        header("Location: uredi_izdelek.php?id=" . urlencode($id_izdelka));
-        exit;
-    }
-
-    if (isset($_POST['odstrani_sliko'])) {
-        mysqli_query($conn, "UPDATE izdelek SET slika = NULL WHERE id_i = $id_izdelka");
-
-        header("Location: uredi_izdelek.php?id=" . urlencode($id_izdelka));
-        exit;
-    }
-
-    if (isset($_POST['odstrani'])) {
-        mysqli_query($conn, "DELETE FROM izdelek WHERE id_i = $id_izdelka");
-
-        header("Location: izdelki.php");
-        exit;
-    }
+    header("Location: uredi_izdelek.php?id=" . $id_izdelka);
+    exit;
 }
+if (isset($_POST['odstrani_sliko'])) {
+	$stmt = mysqli_prepare($conn, "UPDATE izdelek SET slika = NULL WHERE id_i = ?");
+	mysqli_stmt_bind_param($stmt, "i", $id_izdelka);
+	mysqli_stmt_execute($stmt);
+	mysqli_stmt_close($stmt);
+
+    header("Location: uredi_izdelek.php?id=" . $id_izdelka);
+    exit;
+}
+if (isset($_POST['odstrani'])) {
+	$stmt = mysqli_prepare($conn, "DELETE FROM izdelek WHERE id_i = ?");
+	mysqli_stmt_bind_param($stmt, "i", $id_izdelka);
+	mysqli_stmt_execute($stmt);
+	mysqli_stmt_close($stmt);
+
+	header("Location: izdelki.php");
+	exit;
+}
+
 
 $result = mysqli_query($conn, "SELECT * FROM izdelek WHERE id_i = $id_izdelka");
 $izdelek = mysqli_fetch_assoc($result);
@@ -89,19 +135,21 @@ if (!$izdelek) {
     <h1>Urejanje: <?= htmlspecialchars($izdelek['ime']) ?></h1>
 
     <section>
-        <h2>Slika</h2>
-        <?php if ($izdelek['slika']): ?>
-            <img src="<?= htmlspecialchars($izdelek['slika']) ?>" width="200" alt="Slika izdelka"><br>
-        <?php else: ?>
-            <p>Ni slike.</p>
-        <?php endif; ?>
-        <form method="post" style="margin-top: 10px;">
-            <label>Vnesi URL slike:</label><br>
-            <input type="text" name="url_slike" value="<?= htmlspecialchars($izdelek['slika'] ?? '') ?>" style="width: 100%;"><br><br>
-            <button type="submit" name="zamenjaj_sliko">Shrani URL slike</button>
-            <button type="submit" name="odstrani_sliko">Odstrani sliko</button>
-        </form>
-    </section>
+		<h2>Slika</h2>
+		<?php if (!empty($izdelek['slika'])): ?>
+			<img src="<?= htmlspecialchars($izdelek['slika']) ?>" width="200" alt="Slika izdelka"><br>
+		<?php else: ?>
+			<p>Ni slike.</p>
+		<?php endif; ?>
+
+		<form method="post" style="margin-top: 10px;">
+			<label>Vnesi URL slike:</label><br>
+			<input type="text" name="url_slike" value="<?= htmlspecialchars($izdelek['slika'] ?? '') ?>" style="width: 100%;"><br><br>
+			<button type="submit" name="zamenjaj_sliko">Shrani URL slike</button>
+			<button type="submit" name="odstrani_sliko">Odstrani sliko</button>
+		</form>
+	</section>
+
 
     <section>
         <h2>Splošno</h2>

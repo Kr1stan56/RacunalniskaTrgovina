@@ -13,9 +13,12 @@ $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
     mysqli_stmt_execute($stmt);
-    $resultat = mysqli_stmt_get_result($stmt);
-    $izdelki = mysqli_fetch_all($resultat, MYSQLI_ASSOC);
-    mysqli_stmt_close($stmt);
+    $rezultat = mysqli_stmt_get_result($stmt);
+	$izdelki = [];
+	while ($vrstica = mysqli_fetch_assoc($rezultat)) {
+		$izdelki[] = $vrstica;
+	}
+		mysqli_stmt_close($stmt);
 } else {
     $izdelki = [];
 }

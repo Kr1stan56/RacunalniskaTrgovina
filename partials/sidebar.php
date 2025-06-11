@@ -22,7 +22,7 @@ if ($toggle % 2 !== 0) {
 				
 				<a href="?" ><div class="category-item"s>
 					Vse kategorije	
-				</div>
+			</div>
 				</a>
 				<?php foreach ($kategorije as $kat): ?>
 				<div>

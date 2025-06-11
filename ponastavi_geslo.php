@@ -5,9 +5,28 @@ $napaka = '';
 $uspeh = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
-    $geslo = $_POST['geslo'] ?? '';
-    $ponovno = $_POST['ponovno'] ?? '';
+    //$email = $_POST['email'] ?? '';
+    //$geslo = $_POST['geslo'] ?? '';
+    //$ponovno = $_POST['ponovno'] ?? '';
+	
+	if (isset($_POST['email'])) {
+		$email = $_POST['email'];
+	} else {
+		$email = '';
+	}
+
+	if (isset($_POST['geslo'])) {
+		$geslo = $_POST['geslo'];
+	} else {
+		$geslo = '';
+	}
+
+	if (isset($_POST['ponovno'])) {
+		$ponovno = $_POST['ponovno'];
+	} else {
+		$ponovno = '';
+	}
+
 
     if ($geslo !== $ponovno) {
         $napaka = "Gesli se ne ujemata.";
@@ -17,12 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = mysqli_prepare($conn, "UPDATE uporabniki SET geslo = ? WHERE email = ?");
         mysqli_stmt_bind_param($stmt, "ss", $hash, $email);
 
-        if (mysqli_stmt_execute($stmt) && mysqli_stmt_affected_rows($stmt) > 0) {
-            $uspeh = "Geslo uspešno posodobljeno.";
-        } else {
-            $napaka = "Napaka ali uporabnik ne obstaja.";
-        }
-
+        $uspeh = "Geslo uspešno posodobljeno.";
         mysqli_stmt_close($stmt);
     }
 }

@@ -4,56 +4,54 @@ session_start();
 
 $napaka = [];
 $uspeh = '';
+try{
+	if (isset($_POST['registracija'])) {
+		$ime = trim($_POST['ime']);
+		$priimek = trim($_POST['priimek']);
+		$email = trim($_POST['email']);
+		$geslo = $_POST['geslo'];
+		$naslov = trim($_POST['naslov']);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registracija'])) {
-    try {
-        $ime = trim($_POST['ime']);
-        $priimek = trim($_POST['priimek']);
-        $email = trim($_POST['email']);
-        $geslo = $_POST['geslo'];
-        $naslov = trim($_POST['naslov']);
+		if (empty($ime) || empty($priimek) || empty($email) || empty($geslo) || empty($naslov)) {//x   isset(naslov)
+			$napaka = "Vsa polja so obvezna.";
+		}
 
-        if (empty($ime) || empty($priimek) || empty($email) || empty($geslo) || empty($naslov)) {
-            throw new Exception("Vsa polja so obvezna.");
-        }
+		$stmt = mysqli_prepare($conn, "SELECT id_u FROM uporabniki WHERE email = ?");
+		mysqli_stmt_bind_param($stmt, "s", $email);
+		mysqli_stmt_execute($stmt);
 
-        // Preveri, ali e-pošta že obstaja
-        $stmt = mysqli_prepare($conn, "SELECT id_u FROM uporabniki WHERE email = ?");
-        mysqli_stmt_bind_param($stmt, "s", $email);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_store_result($stmt);
+		mysqli_stmt_bind_result($stmt, $id_u);
 
-        if (mysqli_stmt_num_rows($stmt) > 0) {
-            $napaka[] = "E-pošta je že v uporabi.";
-        }
+		if (mysqli_stmt_fetch($stmt)) {
+			$napaka = "E-pošta je že v uporabi.";
+		}
 
-        mysqli_stmt_close($stmt);
+		mysqli_stmt_close($stmt);
 
-        if (empty($napaka)) {
-            $hashed_geslo = sha1($geslo);
-            $id_p = 1;
+		if (isset($napaka)) {
+			$hashed_geslo = sha1($geslo);
+			$id_p = 1;
 
-            $stmt = mysqli_prepare($conn, "INSERT INTO uporabniki (ime, priimek, email, geslo, naslov, datum_registracije, id_p) 
-                                           VALUES (?, ?, ?, ?, ?, NOW(), ?)");
-            mysqli_stmt_bind_param($stmt, "sssssi", $ime, $priimek, $email, $hashed_geslo, $naslov, $id_p);
+			$stmt = mysqli_prepare($conn, "INSERT INTO uporabniki (ime, priimek, email, geslo, naslov, datum_registracije, id_p) 
+										   VALUES (?, ?, ?, ?, ?, NOW(), ?)");
+			mysqli_stmt_bind_param($stmt, "sssssi", $ime, $priimek, $email, $hashed_geslo, $naslov, $id_p);
 
-            if (mysqli_stmt_execute($stmt)) {
-                $uspeh = "Registracija uspešna! Lahko se prijavite.";
-                header("Refresh: 3; URL=login.php");
-            } else {
-                throw new Exception("Napaka pri registraciji.");
-            }
+			if (mysqli_stmt_execute($stmt)) {
+				$uspeh = "Registracija uspešna! Lahko se prijavite.";
+				header("Refresh: 3; URL=login.php");
+			} else {
+				$napaka = "Prišlo je do napake preveri vnesene podatke";
+			}
 
-            mysqli_stmt_close($stmt);
-        }
-
-    } catch (Exception $e) {
-        $napaka[] = $e->getMessage();
-    }
+			mysqli_stmt_close($stmt);
+		}
+	}
+} catch (Exception ) {
+	
 }
 ?>
 
-?>
+
 <!DOCTYPE html>
 <html lang="sl">
 <head>
@@ -66,11 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registracija'])) {
         <h1>Registracija</h1>
 
         <?php if ($napaka): ?>
-            <div style="color: red; margin-bottom: 15px;"><?= $napaka ?></div>
+            <div style="color: red; margin-bottom: 15px;"><?= htmlspecialchars($napaka) ?></div>
         <?php endif; ?>
 
         <?php if ($uspeh): ?>
-            <div style="color: green; margin-bottom: 15px;"><?= $uspeh ?></div>
+            <div style="color: green; margin-bottom: 15px;"><?= htmlspecialchars($uspeh) ?></div>
         <?php endif; ?>
 
         <form method="post">

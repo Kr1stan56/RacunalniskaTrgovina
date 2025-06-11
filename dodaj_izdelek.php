@@ -9,21 +9,29 @@ if (!isset($_SESSION['id_p']) || $_SESSION['id_p'] != 2) {
 
 $kategorije = [];
 $sql_kat = "SELECT id_ka, ime FROM kategorije ORDER BY ime";
-$result = mysqli_query($conn, $sql_kat);
+$stmt = mysqli_prepare($conn,"SELECT id_ka, ime FROM kategorije ORDER BY ime");
+if($stmt){
+	mysqli_stmt_execute($stmt);
+	$result = mysqli_stmt_get_result($stmt);
+	if($result){
+		while($row = mysqli_fetch_assoc($result)){
+			$kategorije[]=$row;
+		}
+		
+	}
+    mysqli_stmt_close($stmt);
 
-if ($result && mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $kategorije[] = $row;
-    }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['shrani'])) {
-    $ime = $_POST['ime'];
+
+
+if (isset($_POST['shrani'])) {
+    $ime = trim($_POST['ime']);
     $opis = $_POST['opis'];
-    $cena = floatval($_POST['cena']);
-    $zaloga = intval($_POST['zaloga']);
+    $cena = $_POST['cena'];
+    $zaloga = $_POST['zaloga'];
     $url_slike = trim($_POST['url_slike']);
-    $id_kategorije = intval($_POST['kategorija']);
+    $id_kategorije = $_POST['kategorija'];
 
     $stmt = mysqli_prepare($conn, "INSERT INTO izdelek (ime, opis, cena, zaloga, slika, id_ka) VALUES (?, ?, ?, ?, ?, ?)");
     if ($stmt) {

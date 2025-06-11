@@ -7,7 +7,7 @@ if (!isset($_SESSION['id_p']) || $_SESSION['id_p'] != 2) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['shrani'])) {
+if (isset($_POST['shrani'])) {
     $ime = trim($_POST['ime']);
 
     if (!empty($ime)) {

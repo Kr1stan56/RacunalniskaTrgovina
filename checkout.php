@@ -199,15 +199,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div>
                 <h2>Način plačila</h2>
                 <label>
-                    <input type="radio" name="nacin_placila" value="povzetje" 
-                        <?php if (isset($_POST['nacin_placila']) && $_POST['nacin_placila'] === 'povzetje')  ?>>
-                    Plačilo ob prevzemu (povzetje)
-                </label><br>
-                <label>
-                    <input type="radio" name="nacin_placila" value="kartica" 
-                        <?php if (isset($_POST['nacin_placila']) && $_POST['nacin_placila'] === 'kartica') ?>>
-                    Plačilo s kartico
-                </label>
+					<input type="radio" name="nacin_placila" value="povzetje"
+						<?php if (isset($_POST['nacin_placila']) && $_POST['nacin_placila'] === 'povzetje') echo 'checked'; ?>>
+					Plačilo ob prevzemu (povzetje)
+				</label><br>
+
+				<label>
+					<input type="radio" name="nacin_placila" value="kartica"
+						<?php if (isset($_POST['nacin_placila']) && $_POST['nacin_placila'] === 'kartica') echo 'checked'; ?>>
+					Plačilo s kartico
+				</label>
+
             </div>
 
             <div id="podrobnosti-kartice" >

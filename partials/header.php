@@ -2,39 +2,19 @@
 <?php require_once 'baza.php'; ?>
 
 <?php
-$izbrana_kategorija = null;
-$iskalnik = null;
 
-if (isset($_GET['kategorija']) && $_GET['kategorija'] !== '' && $_GET['kategorija'] !== 'vse') {
-    $izbrana_kategorija = intval($_GET['kategorija']);
-}
 
-if (isset($_GET['q']) && trim($_GET['q']) !== '') {
-    $iskalnik = '%' . trim($_GET['q']) . '%';
-}
+$id_kosarice = $_SESSION['id_k'] ;
+	
 
-if ($iskalnik && $izbrana_kategorija !== null) {
-    $stmt = $conn->prepare("
-        SELECT * FROM izdelek 
-        WHERE (ime LIKE ? OR opis LIKE ?) AND id_ka = ?
-    ");
-    $stmt->bind_param("ssi", $iskalnik, $iskalnik, $izbrana_kategorija);
+$stmt_st = mysqli_prepare($conn, "SELECT COUNT(*) AS stevilo FROM postavke_kosarice	 WHERE id_k = ?");
+mysqli_stmt_bind_param($stmt_st,"i",$id_kosarice);
+mysqli_stmt_execute($stmt_st);
 
-} elseif ($iskalnik) {
-    $stmt = $conn->prepare("
-        SELECT * FROM izdelek 
-        WHERE ime LIKE ? OR opis LIKE ?
-    ");
-    $stmt->bind_param("ss", $iskalnik, $iskalnik);
+mysqli_stmt_bind_result($stmt_st,$stevilo);
+mysqli_stmt_fetch($stmt_st);
+mysqli_stmt_close($stmt_st);
 
-} elseif ($izbrana_kategorija !== null) {
-    $stmt = $conn->prepare("
-        SELECT * FROM izdelek 
-        WHERE id_ka = ?
-    ");
-    $stmt->bind_param("i", $izbrana_kategorija);
-
-}
 ?>
 <header class="header">
     <div class="glava-vsebina">
@@ -65,7 +45,7 @@ if ($iskalnik && $izbrana_kategorija !== null) {
 
             <a href="kosarica.php" class="ikona-kosarica">
                 <img src="images/kosarica.png" alt="Košarica" class="kosarica-ikona">
-                <span class="stevec-kosarice">0</span>
+                <span class="stevec-kosarice"><?php= htmlspecialchars($stevilo)?></span>
             </a>
         </div>
     </div>
@@ -73,13 +53,18 @@ if ($iskalnik && $izbrana_kategorija !== null) {
 
 	<div class="iskalnik-vsebina">
 		<form action="izdelki.php" method="get" class="iskalni-obrazec">
-			<input type="text" name="q" placeholder="Kaj iščete?" value="<?= $_GET['q'] ?? '' ?>" class="iskalno-polje">
+			<input type="text" name="query" placeholder="Kaj iščete?" value="<?php if (isset($_GET['query'])) 
+																			{ 'value="' . htmlspecialchars($_GET['query']) . '"'; } 
+																				else 
+																			{  'value=""';}
+																		?>" class="iskalno-polje">
 
 			<select name="kategorija" class="kategorija" >
 				<option value="" >Vse kategorije</option>
 				<?php foreach ($kategorije as $kat): ?>
-					<option value="<?= $kat['id_ka'] ?>" <?= (isset($_GET['kategorija']) && $_GET['kategorija'] == $kat['id_ka']) ? 'selected' : '' ?>>
-						<?=$kat['ime'] ?>
+					<option value="<?= $kat['id_ka'] ?>" <?php if (isset($_GET['kategorija']) && $_GET['kategorija'] == $kat['id_ka']) 
+														{ echo 'selected'; }?> > 
+													<?=$kat['ime'] ?>
 					</option>
 				<?php endforeach; ?>
 			</select>
