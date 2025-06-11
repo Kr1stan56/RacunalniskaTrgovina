@@ -45,7 +45,7 @@ mysqli_stmt_close($stmt_st);
 
             <a href="kosarica.php" class="ikona-kosarica">
                 <img src="images/kosarica.png" alt="Košarica" class="kosarica-ikona">
-                <span class="stevec-kosarice"><?php= htmlspecialchars($stevilo)?></span>
+                <span class="stevec-kosarice"><?= htmlspecialchars($stevilo)?></span>
             </a>
         </div>
     </div>

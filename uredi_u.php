@@ -7,13 +7,24 @@ if (!isset($_SESSION['id_p']) || $_SESSION['id_p'] != 2) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['odstrani_id'])) {
+if (isset($_POST['odstrani_id'])) {
     $id_odstrani = $_POST['odstrani_id'];
     if ($id_odstrani > 0) {
-        $stmt = mysqli_prepare($conn, "DELETE FROM uporabniki WHERE id_u = ?");
-        mysqli_stmt_bind_param($stmt, "i", $id_odstrani);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+        $stmt_ids = mysqli_prepare($conn, "DELETE FROM postavke_narocila WHERE id_n IN (SELECT id_n FROM narocila WHERE id_u = ?)");
+        mysqli_stmt_bind_param($stmt_ids, "i", $id_odstrani);
+        mysqli_stmt_execute($stmt_ids);
+        $result = mysqli_stmt_get_result($stmt_ids);
+
+
+        $stmt_del_narocila = mysqli_prepare($conn, "DELETE FROM narocila WHERE id_u = ?");
+        mysqli_stmt_bind_param($stmt_del_narocila, "i", $id_odstrani);
+        mysqli_stmt_execute($stmt_del_narocila);
+        mysqli_stmt_close($stmt_del_narocila);
+
+        $stmt_del_uporabnik = mysqli_prepare($conn, "DELETE FROM uporabniki WHERE id_u = ?");
+        mysqli_stmt_bind_param($stmt_del_uporabnik, "i", $id_odstrani);
+        mysqli_stmt_execute($stmt_del_uporabnik);
+        mysqli_stmt_close($stmt_del_uporabnik);
     }
 }
 

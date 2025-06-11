@@ -64,10 +64,11 @@ mysqli_stmt_close($stmt_kat);
 <head>
     <?php include 'partials/header.php'; ?>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width">
     <title>Izdelki | Računalniška Trgovina</title>
+	
     <link rel="stylesheet" href="css/partials.css">
-		<link rel="stylesheet" href="css/izdelki.css">
+	<link rel="stylesheet" href="css/izdelki.css">
     <link rel="stylesheet" href="css/overwrite.css">
 </head>
 <body>

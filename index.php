@@ -14,6 +14,7 @@ $stmt = mysqli_prepare($conn, $sql);
 if ($stmt) {
     mysqli_stmt_execute($stmt);
     $rezultat = mysqli_stmt_get_result($stmt);
+	
 	$izdelki = [];
 	while ($vrstica = mysqli_fetch_assoc($rezultat)) {
 		$izdelki[] = $vrstica;
