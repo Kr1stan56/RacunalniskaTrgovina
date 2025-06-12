@@ -171,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div>
         <h2>Izdelki v košarici</h2>
-        <?php if (empty($izdelki)) { ?>
+        <?php if (!isset($izdelki)) { ?>
             <p>Košarica je prazna.</p>
         <?php } else { ?>
             <table style="width: 100%; border-collapse: collapse;">
