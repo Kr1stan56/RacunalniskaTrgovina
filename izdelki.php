@@ -5,40 +5,22 @@ include_once 'session.php';
 
 
 
-$izbrana_kategorija = null;
-$iskalnik = null;
+$kat = '';
+$niz = '';
 
-if (isset($_GET['kategorija']) && $_GET['kategorija'] !== '' && $_GET['kategorija'] !== 'vse') {
-    $izbrana_kategorija = $_GET['kategorija'];
+if (!empty($_GET['kategorija'])&& $_GET['kategorija'] !== 'vse') {
+    $kat = $_GET['kategorija'];
 }
 
-if (isset($_GET['query']) && trim($_GET['query']) !== '') {
-    $iskalnik = '%' . trim($_GET['query']) . '%';
-}
-if ($iskalnik && $izbrana_kategorija !== null) {
-    $stmt = mysqli_prepare($conn, "
-        SELECT * FROM izdelek 
-        WHERE (ime LIKE ? OR opis LIKE ?) AND id_ka = ?");
-    mysqli_stmt_bind_param($stmt, "ssi", $iskalnik, $iskalnik, $izbrana_kategorija);
-	
-	} 
-	elseif ($iskalnik) {
-    $stmt = mysqli_prepare($conn, "
-        SELECT * FROM izdelek 
-        WHERE ime LIKE ? OR opis LIKE ?");
-    mysqli_stmt_bind_param($stmt, "ss", $iskalnik, $iskalnik);
-	
-	} 
-	elseif ($izbrana_kategorija !== null) {
-    $stmt = mysqli_prepare($conn, "
-        SELECT * FROM izdelek 
-        WHERE id_ka = ?");
-    mysqli_stmt_bind_param($stmt, "i", $izbrana_kategorija);
-	
-	
-} else {
-    $stmt = mysqli_prepare($conn, "SELECT * FROM izdelek");
-}
+if (!empty($_GET['query'])) {
+    $niz = '%' . trim($_GET['query']) . '%';
+}else{$niz='';}
+
+$stmt = mysqli_prepare($conn, "
+    SELECT * FROM izdelek 
+    WHERE (? = '' OR ime LIKE ? OR opis LIKE ?) AND (? = 0 OR id_ka = ?)");
+mysqli_stmt_bind_param($stmt, "ssssi", $niz, $niz, $niz, $kat, $kat);
+
 
 $izdelki = [];
 mysqli_stmt_execute($stmt);
@@ -48,14 +30,6 @@ while ($vrstica = mysqli_fetch_assoc($rezultat)) {
 }
 mysqli_stmt_close($stmt);
 
-$stmt_kat = mysqli_prepare($conn, "SELECT * FROM kategorije");
-mysqli_stmt_execute($stmt_kat);
-$rezultat_kat = mysqli_stmt_get_result($stmt_kat);
-$kategorije = [];
-while ($vrstica = mysqli_fetch_assoc($rezultat_kat)) {
-    $kategorije[] = $vrstica;
-}
-mysqli_stmt_close($stmt_kat);
 
 ?>
 
@@ -66,9 +40,9 @@ mysqli_stmt_close($stmt_kat);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Izdelki | Računalniška Trgovina</title>
-    <link rel="stylesheet" href="css/partials.css">
-	<link rel="stylesheet" href="css/izdelki.css">
-    <link rel="stylesheet" href="css/overwrite.css">
+    <link rel="stylesheet" href="css/partials.css?v=1.1">
+	<link rel="stylesheet" href="css/izdelki.css?v=1.1">
+    <link rel="stylesheet" href="css/overwrite.css?v=1.1">
 </head>
 <body>
     <?php include 'partials/sidebar.php'; ?>

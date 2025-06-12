@@ -6,6 +6,7 @@ if (!isset($_SESSION['id_uporabnika'])) {
     header("Location: login.php");
     exit;
 }
+$napaka = [];
 
 $id_u = $_SESSION['id_uporabnika'];
 
@@ -71,7 +72,7 @@ if (isset($_POST['dodaj_v_kosarico'])) {
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
         } else {
-            echo "Napaka: izdelek ne obstaja.";
+            $napaka= "Napaka: izdelek ne obstaja.";
             exit;
         }
     }
@@ -108,7 +109,7 @@ $_SESSION['id_k'] = $id_kosarice;
 <head>
     <meta charset="UTF-8">
     <title>Košarica</title>
-    <link rel="stylesheet" href="css/uredi_dodaj.css">
+    <link rel="stylesheet" href="css/uredi_dodaj.css?v=1.1">
 </head>
 <body>
 <main class="uredi-izdelek">
@@ -119,6 +120,9 @@ $_SESSION['id_k'] = $id_kosarice;
     <h1>Tvoja košarica</h1>
 
     <div>
+		<?php if ($napaka): ?>
+			<div style="color: red; margin-bottom: 15px;"><?= htmlspecialchars($napaka) ?></div>
+		<?php endif; ?>
         <?php if (!isset($izdelki)): ?>
             <p>Košarica je prazna.</p>
         <?php else: ?>

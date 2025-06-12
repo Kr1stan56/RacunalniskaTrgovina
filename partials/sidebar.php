@@ -4,6 +4,17 @@ if (isset($_GET['toggle'])) {
 } else {
     $toggle = 1;
 }
+
+$stmt_kat = mysqli_prepare($conn, "SELECT * FROM kategorije ORDER BY ime ASC ");
+mysqli_stmt_execute($stmt_kat);
+$rezultat_kat = mysqli_stmt_get_result($stmt_kat);
+
+
+$kategorije = [];
+while ($vrstica = mysqli_fetch_assoc($rezultat_kat)) {
+    $kategorije[] = $vrstica;
+}
+mysqli_stmt_close($stmt_kat);
 ?>
 
 <?php

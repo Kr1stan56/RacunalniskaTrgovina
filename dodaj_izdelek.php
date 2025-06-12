@@ -2,6 +2,9 @@
 require_once 'baza.php';
 include_once 'session.php';
 
+
+$napaka = [];
+
 if (!isset($_SESSION['id_p']) || $_SESSION['id_p'] != 2) {
     header("Location: index.php");
     exit;
@@ -24,57 +27,54 @@ if($stmt){
 }
 
 
-
-if (isset($_POST['shrani'])) {
+if (isset($_POST['submit'])) {
     $ime = trim($_POST['ime']);
     $opis = $_POST['opis'];
     $cena = $_POST['cena'];
     $zaloga = $_POST['zaloga'];
-    $url_slike = trim($_POST['url_slike']);
     $id_kategorije = $_POST['kategorija'];
 
-    $stmt = mysqli_prepare($conn, "INSERT INTO izdelek (ime, opis, cena, zaloga, slika, id_ka) VALUES (?, ?, ?, ?, ?, ?)");
-    if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "ssdiii", $ime, $opis, $cena, $zaloga, $url_slike, $id_kategorije);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-    }
-
-    header("Location: izdelki.php");
-    exit;
-}
-
-if (isset($_POST["submit"]) && isset($_FILES["fileToUpload"])) {
+    $slika_pot = '';
     $kategorija_ime = '';
+	
+	
     foreach ($kategorije as $kat) {
-        if ($kat['id_ka'] == $izdelek['id_ka']) {
+        if ($kat['id_ka'] == $id_kategorije) {
             $kategorija_ime = $kat['ime'];
             break;
         }
     }
 
-    $target_dir = "images/" . htmlspecialchars($kategorija_ime) . "/";
+    if (!empty($_FILES["fileToUpload"]["name"])) {//FILES globalna sp za datoteke  "name" vrne ime datoteke
+		$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);//preveri sli je slika 	 zacsno ime slike kamor jo php shrani
+		  if($check !== false) {
+		  } else {
+			$napaka= "File is not an image.";
+		  }
+	}
+	$target_dir = "images/" . htmlspecialchars($kategorija_ime) . "/";
+	if(empty($napaka)){
+		$file_name = uniqid(). pathinfo($_FILES["fileToUpload"]["name"], PATHINFO_EXTENSION);//sestavi string iz unikatnega idja ter izluščene končnice
+		$target_file = $target_dir . $file_name;
 
+			//move_uploaded_file(zacasnapot, koncna pot)
+        if (move_uploaded_file($imageFile["tmp_name"], $target_file)) {
+            $slika_pot = $target_file;
+        }
+	}
+        
+    
 
-    $imageFile = $_FILES["fileToUpload"];
-    $ext = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
-    $file_name = uniqid("img_", true) . "." . $ext;
-	
-    $target_file = $target_dir . $file_name;
-
-    if (move_uploaded_file($imageFile["tmp_name"], $target_file)) {
-		
-		
-        $stmt = mysqli_prepare($conn, "UPDATE izdelek SET slika = ? WHERE id_i = ?");
-        mysqli_stmt_bind_param($stmt, "si", $target_file, $id_izdelka);
+    $stmt = mysqli_prepare($conn, "INSERT INTO izdelek (ime, opis, cena, zaloga, slika, id_ka) VALUES (?, ?, ?, ?, ?, ?)");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "ssdiss", $ime, $opis, $cena, $zaloga, $slika_pot, $id_kategorije);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
-
-        header("Location: uredi_izdelek.php?id=" . $id_izdelka);
-        exit;
-    } else {
-        echo "Napaka pri nalaganju slike.";
     }
+	if(empty($napaka)){
+		header("Location: izdelki.php");
+		exit;
+	}
 }
 
 ?>
@@ -85,7 +85,7 @@ if (isset($_POST["submit"]) && isset($_FILES["fileToUpload"])) {
 <head>
     <meta charset="UTF-8">
     <title>Dodaj nov izdelek</title>
-    <link rel="stylesheet" href="css/uredi_dodaj.css">
+    <link rel="stylesheet" href="css/uredi_dodaj.css?v=1.1">
 </head>
 <body>
     <main class="uredi-izdelek">
@@ -96,6 +96,11 @@ if (isset($_POST["submit"]) && isset($_FILES["fileToUpload"])) {
         <h1>Dodaj nov izdelek</h1>
 
         <section>
+			<?php if ($napaka): ?>
+				<div style="color: red; margin-bottom: 15px;"><?= htmlspecialchars($napaka) ?></div>
+			<?php endif; ?>
+
+
 			<h2>Slika</h2>
 			<?php if (!empty($izdelek['slika'])): ?>
 				<img src="<?= htmlspecialchars($izdelek['slika']) ?>" width="200" alt="Slika izdelka"><br>
@@ -103,38 +108,36 @@ if (isset($_POST["submit"]) && isset($_FILES["fileToUpload"])) {
 				<p>Ni slike.</p>
 			<?php endif; ?>
 
-			<form  method="post" enctype="multipart/form-data">
-			  Select image to upload:
-			  <input type="file" name="fileToUpload" id="fileToUpload">
-			  <input type="submit" value="Upload Image" name="submit">
-			</form>
-		</section>
+			<form method="post" enctype="multipart/form-data">
+				<h2>Slika</h2>
+				<input type="file" name="fileToUpload" id="fileToUpload" ¸><br>
 
-        <section>
-            <h2>Splošno</h2>
-                <label>Ime:</label>
-                <input type="text" name="ime" required><br>
+				<h2>Splošno</h2>
+				<label>Ime:</label>
+				<input type="text" name="ime" required><br>
 
-                <label>Opis:</label>
-                <textarea name="opis" required></textarea><br>
+				<label>Opis:</label>
+				<textarea name="opis" required></textarea><br>
 
-                <label>Cena (€):</label>
-                <input type="number" name="cena" required><br>
+				<label>Cena (€):</label>
+				<input type="number" step="0.01" name="cena" required><br>
 
-                <label>Zaloga:</label>
-                <input type="number" name="zaloga" required><br>
+				<label>Zaloga:</label>
+				<input type="number" name="zaloga" required><br>
 
-                <label>Kategorija:</label>
-                <select name="kategorija" required>
-                    <option value="" disabled selected>Izberi kategorijo</option>
-                    <?php foreach ($kategorije as $kat): ?>
+				<label>Kategorija:</label>
+				<select name="kategorija" required>
+					<option value="" disabled selected>Izberi kategorijo</option>
+					<?php foreach ($kategorije as $kat): ?>
 						<option value="<?= $kat['id_ka'] ?>"><?= htmlspecialchars($kat['ime']) ?></option>
 					<?php endforeach; ?>
+				</select><br><br>
 
-                </select><br><br>
+				<button type="submit" name="submit">Dodaj izdelek</button>
+			</form>
+			<br><br>
 
-                <button type="submit" name="shrani">Dodaj izdelek</button>
-            </form>
+
         </section>
     </main>
 </body>

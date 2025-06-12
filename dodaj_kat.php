@@ -30,7 +30,7 @@ if (isset($_POST['shrani'])) {
 <head>
     <meta charset="UTF-8">
     <title>Dodaj kategorijo</title>
-    <link rel="stylesheet" href="css/uredi_dodaj.css">
+    <link rel="stylesheet" href="css/uredi_dodaj?v=1.1.css">
 </head>
 <body>
 <main class="uredi-izdelek">

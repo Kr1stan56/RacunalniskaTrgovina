@@ -57,7 +57,7 @@ try{
 <head>
     <meta charset="UTF-8">
     <title>Registracija</title>
-    <link rel="stylesheet" href="css/uredi_dodaj.css">
+    <link rel="stylesheet" href="css/uredi_dodaj.css?v=1.1">
 </head>
 <body>
     <div class="uredi-izdelek">

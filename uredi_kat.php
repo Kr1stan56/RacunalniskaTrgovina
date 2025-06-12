@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Uredi kategorijo</title>
-    <link rel="stylesheet" href="css/uredi_dodaj.css">
+    <link rel="stylesheet" href="css/uredi_dodaj.css?v=1.1">
 </head>
 <body>
 <main class="uredi-izdelek">

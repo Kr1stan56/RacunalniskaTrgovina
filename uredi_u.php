@@ -48,7 +48,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 <head>
     <meta charset="UTF-8">
     <title>Urejanje uporabnikov</title>
-    <link rel="stylesheet" href="css/uredi_dodaj.css">
+    <link rel="stylesheet" href="css/uredi_dodaj.css?v=1.1">
 </head>
 <body>
 <main class="uredi-izdelek">
