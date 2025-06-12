@@ -13,7 +13,7 @@ if (isset($_POST['odstrani_id'])) {
         $stmt_ids = mysqli_prepare($conn, "DELETE FROM postavke_narocila WHERE id_n IN (SELECT id_n FROM narocila WHERE id_u = ?)");
         mysqli_stmt_bind_param($stmt_ids, "i", $id_odstrani);
         mysqli_stmt_execute($stmt_ids);
-        $result = mysqli_stmt_get_result($stmt_ids);
+		mysqli_stmt_close($stmt_ids);
 
 
         $stmt_del_narocila = mysqli_prepare($conn, "DELETE FROM narocila WHERE id_u = ?");

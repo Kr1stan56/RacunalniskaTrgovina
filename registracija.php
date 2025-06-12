@@ -29,7 +29,7 @@ try{
 		mysqli_stmt_close($stmt);
 
 		if (isset($napaka)) {
-			$hashed_geslo = sha1($geslo);
+			$hashed_geslo = password_hash($geslo, PASSWORD_DEFAULT);
 			$id_p = 1;
 
 			$stmt = mysqli_prepare($conn, "INSERT INTO uporabniki (ime, priimek, email, geslo, naslov, datum_registracije, id_p) 

@@ -5,9 +5,7 @@ $napaka = '';
 $uspeh = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //$email = $_POST['email'] ?? '';
-    //$geslo = $_POST['geslo'] ?? '';
-    //$ponovno = $_POST['ponovno'] ?? '';
+
 	
 	if (isset($_POST['email'])) {
 		$email = $_POST['email'];

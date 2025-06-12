@@ -4,16 +4,27 @@
 <?php
 
 
-$id_kosarice = $_SESSION['id_k'] ;
-	
+try {
+	if (isset($_SESSION['id_k'])) {
+		$id_kosarice = $_SESSION['id_k'];
+	} else {
+		$id_kosarice = null; // ali kaj drugega, kar želiš kot privzeto vrednost
+	}
 
-$stmt_st = mysqli_prepare($conn, "SELECT COUNT(*) AS stevilo FROM postavke_kosarice	 WHERE id_k = ?");
-mysqli_stmt_bind_param($stmt_st,"i",$id_kosarice);
-mysqli_stmt_execute($stmt_st);
+    $stmt_st = mysqli_prepare($conn, "SELECT COUNT(*) AS stevilo FROM postavke_kosarice WHERE id_k = ?");
+    mysqli_stmt_bind_param($stmt_st, "i", $id_kosarice);
+    mysqli_stmt_execute($stmt_st);
 
-mysqli_stmt_bind_result($stmt_st,$stevilo);
-mysqli_stmt_fetch($stmt_st);
-mysqli_stmt_close($stmt_st);
+    mysqli_stmt_bind_result($stmt_st, $stevilo);
+    mysqli_stmt_fetch($stmt_st);
+
+    mysqli_stmt_close($stmt_st);
+
+
+} catch (Exception $e) {
+}
+
+
 
 ?>
 <header class="header">

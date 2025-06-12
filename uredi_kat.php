@@ -16,8 +16,8 @@ mysqli_stmt_execute($stmt);//zažene
 
 
 mysqli_stmt_bind_result($stmt, $ime);//skrani oz binda rezultat ime v $ime  -- samo povezava oz priprava
-
 mysqli_stmt_fetch($stmt);//se izvede ter shrani podatke v $stmt ....$ime output
+
 mysqli_stmt_close($stmt);//pomnilink
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

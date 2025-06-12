@@ -83,10 +83,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             foreach ($izdelki as $izdelek) {
                 $sql_id = "SELECT id_i FROM izdelek WHERE ime = ?";
                 $stmt_id = mysqli_prepare($conn, $sql_id);
+				
                 mysqli_stmt_bind_param($stmt_id, "s", $izdelek['ime']);
                 mysqli_stmt_execute($stmt_id);
+				
                 $result_id = mysqli_stmt_get_result($stmt_id);
                 $row_id = mysqli_fetch_assoc($result_id);
+				
                 $id_izdelka = $row_id['id_i'] ?? null;
 
                 if ($id_izdelka) {

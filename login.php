@@ -6,9 +6,19 @@ $napaka = '';
 $uspeh = '';
 
 if ( isset($_POST['prijava'])) {	
-    $email = $_POST['email'] ?? '';
-	$geslo = $_POST['geslo'] ?? '';
+   
+	
+	if (isset($_POST['email'])) {
+		$email = $_POST['email'];
+	} else {
+		$email = '';
+	}
 
+	if (isset($_POST['geslo'])) {
+		$geslo = $_POST['geslo'];
+	} else {
+		$geslo = '';
+	}
 	$stmt = mysqli_prepare($conn, "SELECT id_u, ime, priimek, geslo, naslov, id_p FROM uporabniki WHERE email = ?");
 	mysqli_stmt_bind_param($stmt, "s", $email);
 	mysqli_stmt_execute($stmt);
@@ -17,7 +27,7 @@ if ( isset($_POST['prijava'])) {
 	$uporabnik = mysqli_fetch_assoc($rezultat);
 
 	if ($uporabnik) {
-		if (sha1($geslo) === $uporabnik['geslo']) {
+		if (password_verify($geslo, $uporabnik['geslo'])) {
 			$_SESSION['ime'] = $uporabnik['ime'];
 			$_SESSION['priimek'] = $uporabnik['priimek'];
 			$_SESSION['id_uporabnika'] = $uporabnik['id_u'];
