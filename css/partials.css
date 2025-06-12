@@ -443,16 +443,20 @@ ul{
     }
 
     .iskalnik-vsebina {
-        overflow: visible;
+        overflow: hidden;
         margin: 20px auto;
         text-align: center;
-        width: 90%;
+        width: 70%;
     }
 
     .iskalni-obrazec {
         text-align: center;
+		width:100%;
     }
+	.iskalni-obrazec > *{
+		border-radius: 0 0 0 0px;
 
+	}
     .iskalno-polje {
         width: 60%;
         max-width: 240px;

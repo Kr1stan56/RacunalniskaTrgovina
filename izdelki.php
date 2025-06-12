@@ -40,7 +40,7 @@ mysqli_stmt_close($stmt);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Izdelki | Računalniška Trgovina</title>
-    <link rel="stylesheet" href="css/partials.css?v=1.1">
+    <link rel="stylesheet" href="css/partials.css?v=1.4">
 	<link rel="stylesheet" href="css/izdelki.css?v=1.1">
     <link rel="stylesheet" href="css/overwrite.css?v=1.1">
 </head>
