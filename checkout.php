@@ -39,7 +39,11 @@ if ($id_kosarice !== null) {
     mysqli_stmt_bind_param($stmt, "i", $id_kosarice);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    $izdelki = mysqli_fetch_all($result, MYSQLI_ASSOC);
+	
+	$izdelki = [];
+	while ($row = mysqli_fetch_assoc($result)) {
+		$izdelki[] = $row;
+	}
 
     foreach ($izdelki as $izdelek) {
         $skupnaCena += $izdelek['kolicina'] * $izdelek['cena_ob_nakupu'];
@@ -50,53 +54,39 @@ $napake = [];
 $uspesno = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['nacin_placila'])) {
-    $nacin_placila = $_POST['nacin_placila'];
-	} else {
-		$nacin_placila = '';
-	}
+    $napake = [];
 
-	if (isset($_POST['stevilka_kartice'])) {
-		$stevilka_kartice = trim($_POST['stevilka_kartice']);
-	} else {
-		$stevilka_kartice = '';
-	}
-
-	if (isset($_POST['mesec'])) {
-		$mesec = $_POST['mesec'];
-	} else {
-		$mesec = '';
-	}
-
-	if (isset($_POST['leto'])) {
-		$leto = $_POST['leto'];
-	} else {
-		$leto = '';
-	}
-
-	if (isset($_POST['cvc'])) {
-		$cvc = trim($_POST['cvc']);
-	} else {
-		$cvc = '';
-	}
-
-	if (isset($_POST['naslov_dostave'])) {
-		$naslov_dostave = trim($_POST['naslov_dostave']);
-	} else {
-		$naslov_dostave = '';
-	}
-
-    if (!isset($nacin_placila)) $napake[] = "Izbrati morate način plačila.";
-    if ($nacin_placila === "kartica") {
-        if (empty($stevilka_kartice)) $napake[] = "Številka kartice ni vpisana.";
-        if (empty($mesec) || empty($leto)) $napake[] = "Datum poteka kartice ni vpisan.";
-        if (empty($cvc)) $napake[] = "CVC ni vpisan.";
+    if (empty($_POST['nacin_placila'])) {
+        $napake[] = "Izbrati morate način plačila.";
+    } else {
+        $nacin_placila = $_POST['nacin_placila'];
     }
-    if (empty($naslov_dostave)) $napake[] = "Naslov dostave je obvezen.";
+
+    if (isset($nacin_placila) && $nacin_placila === "kartica") {
+        if (empty($_POST['stevilka_kartice'])) {
+            $napake[] = "Številka kartice ni vpisana.";
+        }
+        if (empty($_POST['mesec']) || empty($_POST['leto'])) {
+            $napake[] = "Datum poteka kartice ni vpisan.";
+        }
+        if (empty($_POST['cvc'])) {
+            $napake[] = "CVC ni vpisan.";
+        }
+    }
+
+    if (empty($_POST['naslov_dostave'])) {
+        $napake[] = "Naslov dostave je obvezen.";
+    }else{
+		$naslov_dostave = $_POST['naslov_dostave'];
+	}
 
     if (empty($napake)) {
         $uspesno = true;
+    } else {
+        $uspesno = false;
     }
+
+
 /*-------empty/isset*/
     if ($uspesno) {
         $sql = "
@@ -106,16 +96,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         mysqli_stmt_bind_param($stmt, "issd", $id_u, $nacin_placila, $naslov_dostave, $skupnaCena);
 
         if (mysqli_stmt_execute($stmt)) {
-            $id_narocila = mysqli_insert_id($conn);
+			
+			$result = mysqli_query($conn, "SELECT MAX(id_n) AS id FROM narocila");
+			$row = mysqli_fetch_assoc($result);
+			$id_narocila = $row['id'];
 
-            $sql_postavka = "
-                INSERT INTO postavke_narocila (id_n, id_i, kolicina, cena_ob_nakupu)
-                VALUES (?, ?, ?, ?)";
-            $stmt_postavka = mysqli_prepare($conn, $sql_postavka);
+            $stmt_postavka = mysqli_prepare($conn, "INSERT INTO postavke_narocila (id_n, id_i, kolicina, cena_ob_nakupu) VALUES (?, ?, ?, ?)");
 
             foreach ($izdelki as $izdelek) {
-                $sql_id = "SELECT id_i FROM izdelek WHERE ime = ?";
-                $stmt_id = mysqli_prepare($conn, $sql_id);
+                $stmt_id = mysqli_prepare($conn, "SELECT id_i FROM izdelek WHERE ime = ?");
 				
                 mysqli_stmt_bind_param($stmt_id, "s", $izdelek['ime']);
                 mysqli_stmt_execute($stmt_id);
@@ -123,7 +112,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $result_id = mysqli_stmt_get_result($stmt_id);
                 $row_id = mysqli_fetch_assoc($result_id);
 				
-                $id_izdelka = $row_id['id_i'] ?? null;
+				if(!isset($row_id['id_i'])) {
+					$id_izdelka = $row_id['id_i'];
+				} else {
+					$id_izdelka = null;
+				}
 
                 if ($id_izdelka) {
                     mysqli_stmt_bind_param($stmt_postavka, "iiid", $id_narocila, $id_izdelka, $izdelek['kolicina'], $izdelek['cena_ob_nakupu']);
@@ -139,8 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
 
-            $sql = "DELETE FROM postavke_kosarice WHERE id_k = ?";
-            $stmt = mysqli_prepare($conn, $sql);
+            $stmt = mysqli_prepare($conn, "DELETE FROM postavke_kosarice WHERE id_k = ?");
             mysqli_stmt_bind_param($stmt, "i", $id_kosarice);
             mysqli_stmt_execute($stmt);
 
@@ -236,13 +228,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h2>Način plačila</h2>
                 <label>
 					<input type="radio" name="nacin_placila" value="povzetje"
-						<?php if (isset($_POST['nacin_placila']) && $_POST['nacin_placila'] === 'povzetje') echo 'checked'; ?>>
+						<?php if (isset($_POST['nacin_placila']) && $_POST['nacin_placila'] === 'povzetje')
+						{
+							echo 'checked';
+						} ?>>
 					Plačilo ob prevzemu (povzetje)
 				</label><br>
 
 				<label>
 					<input type="radio" name="nacin_placila" value="kartica"
-						<?php if (isset($_POST['nacin_placila']) && $_POST['nacin_placila'] === 'kartica') echo 'checked'; ?>>
+						<?php if (isset($_POST['nacin_placila']) && $_POST['nacin_placila'] === 'kartica')
+						{
+						echo 'checked';
+						} ?>>
+							
 					Plačilo s kartico
 				</label>
 
@@ -252,7 +251,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h2>Podatki o kartici</h2>
                 <label>Številka kartice:
                     <input type="text" name="stevilka_kartice" 
-                           value="<?php if (isset($_POST['stevilka_kartice'])) { echo $_POST['stevilka_kartice']; } ?>" 
+                           value="<?php if (isset($_POST['stevilka_kartice'])) 
+						   { 
+						   echo $_POST['stevilka_kartice']; 
+						   } ?>" 
                            placeholder="XXXX XXXX XXXX XXXX">
                 </label>
                 <label>Veljavnost (mesec/leto):<br>
