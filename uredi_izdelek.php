@@ -118,7 +118,42 @@ if (!$izdelek) {
     header("Location: izdelki.php");
     exit;
 }
+
+if (isset($_POST["submit"]) && isset($_FILES["fileToUpload"])) {
+    $kategorija_ime = '';
+    foreach ($kategorije as $kat) {
+        if ($kat['id_ka'] == $izdelek['id_ka']) {
+            $kategorija_ime = $kat['ime'];
+            break;
+        }
+    }
+
+    $target_dir = "images/" . htmlspecialchars($kategorija_ime) . "/";
+
+
+    $imageFile = $_FILES["fileToUpload"];
+    $ext = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
+    $file_name = uniqid("img_", true) . "." . $ext;
+	
+    $target_file = $target_dir . $file_name;
+
+    if (move_uploaded_file($imageFile["tmp_name"], $target_file)) {
+		
+		
+        $stmt = mysqli_prepare($conn, "UPDATE izdelek SET slika = ? WHERE id_i = ?");
+        mysqli_stmt_bind_param($stmt, "si", $target_file, $id_izdelka);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        header("Location: uredi_izdelek.php?id=" . $id_izdelka);
+        exit;
+    } else {
+        echo "Napaka pri nalaganju slike.";
+    }
+}
+
 ?>
+
 <!DOCTYPE html>
 <html lang="sl">
 <head>
@@ -142,11 +177,10 @@ if (!$izdelek) {
 			<p>Ni slike.</p>
 		<?php endif; ?>
 
-		<form method="post" style="margin-top: 10px;">
-			<label>Vnesi URL slike:</label><br>
-			<input type="text" name="url_slike" value="<?= htmlspecialchars($izdelek['slika'] ?? '') ?>" style="width: 100%;"><br><br>
-			<button type="submit" name="zamenjaj_sliko">Shrani URL slike</button>
-			<button type="submit" name="odstrani_sliko">Odstrani sliko</button>
+		<form  method="post" enctype="multipart/form-data">
+		  Select image to upload:
+		  <input type="file" name="fileToUpload" id="fileToUpload">
+		  <input type="submit" value="Upload Image" name="submit">
 		</form>
 	</section>
 
@@ -170,7 +204,7 @@ if (!$izdelek) {
             <select name="kategorija" required>
                 <option value="" disabled>Izberi kategorijo</option>
                 <?php foreach ($kategorije as $kat): ?>
-                    <option value="<?= $kat['id_ka'] ?>" <?= ($kat['id_ka'] == $izdelek['id_ka']) ? 'selected' : '' ?>>
+                    <option value="<?= $kat['id_ka'] ?>" <?php if ($kat['id_ka'] == $izdelek['id_ka']) echo 'selected'; ?>>
                         <?= htmlspecialchars($kat['ime']) ?>
                     </option>
                 <?php endforeach; ?>

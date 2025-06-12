@@ -43,6 +43,40 @@ if (isset($_POST['shrani'])) {
     header("Location: izdelki.php");
     exit;
 }
+
+if (isset($_POST["submit"]) && isset($_FILES["fileToUpload"])) {
+    $kategorija_ime = '';
+    foreach ($kategorije as $kat) {
+        if ($kat['id_ka'] == $izdelek['id_ka']) {
+            $kategorija_ime = $kat['ime'];
+            break;
+        }
+    }
+
+    $target_dir = "images/" . htmlspecialchars($kategorija_ime) . "/";
+
+
+    $imageFile = $_FILES["fileToUpload"];
+    $ext = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
+    $file_name = uniqid("img_", true) . "." . $ext;
+	
+    $target_file = $target_dir . $file_name;
+
+    if (move_uploaded_file($imageFile["tmp_name"], $target_file)) {
+		
+		
+        $stmt = mysqli_prepare($conn, "UPDATE izdelek SET slika = ? WHERE id_i = ?");
+        mysqli_stmt_bind_param($stmt, "si", $target_file, $id_izdelka);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        header("Location: uredi_izdelek.php?id=" . $id_izdelka);
+        exit;
+    } else {
+        echo "Napaka pri nalaganju slike.";
+    }
+}
+
 ?>
 
 
@@ -62,11 +96,19 @@ if (isset($_POST['shrani'])) {
         <h1>Dodaj nov izdelek</h1>
 
         <section>
-            <h2>Slika</h2>
-            <form method="post">
-                <label>Vnesi URL slike:</label><br>
-                <input type="text" name="url_slike" style="width: 100%;"><br><br>
-        </section>
+			<h2>Slika</h2>
+			<?php if (!empty($izdelek['slika'])): ?>
+				<img src="<?= htmlspecialchars($izdelek['slika']) ?>" width="200" alt="Slika izdelka"><br>
+			<?php else: ?>
+				<p>Ni slike.</p>
+			<?php endif; ?>
+
+			<form  method="post" enctype="multipart/form-data">
+			  Select image to upload:
+			  <input type="file" name="fileToUpload" id="fileToUpload">
+			  <input type="submit" value="Upload Image" name="submit">
+			</form>
+		</section>
 
         <section>
             <h2>Splošno</h2>

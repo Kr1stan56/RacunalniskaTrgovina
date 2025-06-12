@@ -24,7 +24,12 @@ if ($row && $row['id_k']) {
     $stmt = mysqli_prepare($conn, "INSERT INTO kosarica (datum_ustvarjanja, status) VALUES (CURDATE(), 1)");
     mysqli_stmt_execute($stmt);
 	
-    $id_kosarice = mysqli_insert_id($conn);//vrne zadnji vnesen id iz uporabnikove povezave conn
+    //$id_kosarice = mysqli_insert_id($conn);//vrne zadnji vnesen id iz uporabnikove povezave conn
+	$stmt = mysqli_prepare($conn, "SELECT MAX(id_k) AS id FROM kosraica");
+	$result=mysqli_store_result($stmt);
+	$row = mysqli_fetch_assoc($result);
+	$id_kosarice = $row['id'];
+	
     mysqli_stmt_close($stmt);
 
     $stmt = mysqli_prepare($conn, "UPDATE uporabniki SET id_k = ? WHERE id_u = ?");

@@ -89,10 +89,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 /*-------empty/isset*/
     if ($uspesno) {
-        $sql = "
+        $stmt = mysqli_prepare($conn, "
             INSERT INTO narocila (id_u, nacin_placila, naslov_dostave, skupna_cena)
-            VALUES (?, ?, ?, ?)";
-        $stmt = mysqli_prepare($conn, $sql);
+            VALUES (?, ?, ?, ?)");
         mysqli_stmt_bind_param($stmt, "issd", $id_u, $nacin_placila, $naslov_dostave, $skupnaCena);
 
         if (mysqli_stmt_execute($stmt)) {
@@ -215,13 +214,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div>
                 <h2>Naslov dostave</h2>
-                <textarea name="naslov_dostave" required><?php
-                    if (isset($_POST['naslov_dostave'])) {
-                        echo $_POST['naslov_dostave'];
-                    } elseif (isset($_SESSION['naslov'])) {
-                        echo $_SESSION['naslov'];
-                    }
-                ?></textarea>
+                <input type="text" name="naslov_dostave" required></input>
             </div>
 
             <div>

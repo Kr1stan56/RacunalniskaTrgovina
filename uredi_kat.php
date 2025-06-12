@@ -11,7 +11,7 @@ $id = intval($_GET['id']);//iz url id ja pretvori v spremeljivko
 
 $stmt = mysqli_prepare($conn, "SELECT ime FROM kategorije WHERE id_ka = ?");//pripravi sql stavek
 mysqli_stmt_bind_param($stmt, "i", $id);//binda ? z $id 
-mysqli_stmt_execute($stmt);//zažene
+mysqli_stmt_execute($stmt);//zažene		
 
 
 
