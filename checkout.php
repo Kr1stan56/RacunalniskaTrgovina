@@ -20,7 +20,11 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $row = mysqli_fetch_assoc($result);
 
-$id_kosarice = $row['id_k'] ?? null;
+if (isset($row['id_k'])) {
+    $id_kosarice = $row['id_k'];
+} else {
+    $id_kosarice = null;
+}
 
 $izdelki = [];
 $skupnaCena = 0;
@@ -46,14 +50,43 @@ $napake = [];
 $uspesno = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nacin_placila = $_POST['nacin_placila'] ?? '';
-    $stevilka_kartice = trim($_POST['stevilka_kartice'] ?? '');
-    $mesec = $_POST['mesec'] ?? '';
-    $leto = $_POST['leto'] ?? '';
-    $cvc = trim($_POST['cvc'] ?? '');
-    $naslov_dostave = trim($_POST['naslov_dostave'] ?? '');
+    if (isset($_POST['nacin_placila'])) {
+    $nacin_placila = $_POST['nacin_placila'];
+	} else {
+		$nacin_placila = '';
+	}
 
-    if (empty($nacin_placila)) $napake[] = "Izbrati morate način plačila.";
+	if (isset($_POST['stevilka_kartice'])) {
+		$stevilka_kartice = trim($_POST['stevilka_kartice']);
+	} else {
+		$stevilka_kartice = '';
+	}
+
+	if (isset($_POST['mesec'])) {
+		$mesec = $_POST['mesec'];
+	} else {
+		$mesec = '';
+	}
+
+	if (isset($_POST['leto'])) {
+		$leto = $_POST['leto'];
+	} else {
+		$leto = '';
+	}
+
+	if (isset($_POST['cvc'])) {
+		$cvc = trim($_POST['cvc']);
+	} else {
+		$cvc = '';
+	}
+
+	if (isset($_POST['naslov_dostave'])) {
+		$naslov_dostave = trim($_POST['naslov_dostave']);
+	} else {
+		$naslov_dostave = '';
+	}
+
+    if (!isset($nacin_placila)) $napake[] = "Izbrati morate način plačila.";
     if ($nacin_placila === "kartica") {
         if (empty($stevilka_kartice)) $napake[] = "Številka kartice ni vpisana.";
         if (empty($mesec) || empty($leto)) $napake[] = "Datum poteka kartice ni vpisan.";
@@ -64,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($napake)) {
         $uspesno = true;
     }
-
+/*-------empty/isset*/
     if ($uspesno) {
         $sql = "
             INSERT INTO narocila (id_u, nacin_placila, naslov_dostave, skupna_cena)
