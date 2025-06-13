@@ -25,7 +25,7 @@ if ($row && $row['id_k']) {
     $stmt = mysqli_prepare($conn, "INSERT INTO kosarica (datum_ustvarjanja, status) VALUES (CURDATE(), 1)");
     mysqli_stmt_execute($stmt);
 	
-    //$id_kosarice = mysqli_insert_id($conn);//vrne zadnji vnesen id iz uporabnikove povezave conn
+    //vrne zadnji vnesen id iz uporabnikove povezave conn
 	$id_kosarice = mysqli_insert_id($conn);
 	
     mysqli_stmt_close($stmt);
