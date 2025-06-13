@@ -8,7 +8,7 @@ try {
 	if (isset($_SESSION['id_k'])) {
 		$id_kosarice = $_SESSION['id_k'];
 	} else {
-		$id_kosarice = null; // ali kaj drugega, kar želiš kot privzeto vrednost
+		$id_kosarice = '';//empty x
 	}
 
     $stmt_st = mysqli_prepare($conn, "SELECT COUNT(*) AS stevilo FROM postavke_kosarice WHERE id_k = ?");
@@ -23,7 +23,16 @@ try {
 
 } catch (Exception $e) {
 }
+$stmt_kat = mysqli_prepare($conn, "SELECT * FROM kategorije ORDER BY ime ASC ");
+mysqli_stmt_execute($stmt_kat);
+$rezultat_kat = mysqli_stmt_get_result($stmt_kat);
 
+
+$kategorije = [];
+while ($vrstica = mysqli_fetch_assoc($rezultat_kat)) {
+    $kategorije[] = $vrstica;
+}
+mysqli_stmt_close($stmt_kat);
 
 
 ?>

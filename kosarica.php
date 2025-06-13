@@ -26,10 +26,7 @@ if ($row && $row['id_k']) {
     mysqli_stmt_execute($stmt);
 	
     //$id_kosarice = mysqli_insert_id($conn);//vrne zadnji vnesen id iz uporabnikove povezave conn
-	$stmt = mysqli_prepare($conn, "SELECT MAX(id_k) AS id FROM kosraica");
-	$result=mysqli_store_result($stmt);
-	$row = mysqli_fetch_assoc($result);
-	$id_kosarice = $row['id'];
+	$id_kosarice = mysqli_insert_id($conn);
 	
     mysqli_stmt_close($stmt);
 
