@@ -32,6 +32,8 @@ if ($stmt) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Domov | Računalniška Trgovina</title>
+	<link rel="icon" type="image/x-icon" href="/images/favicon-16x16.png">
+
     <link rel="stylesheet" href="css/main.css?v=1.1">
     <link rel="stylesheet" href="css/partials.css?v=1.4">	
     <link rel="stylesheet" href="css/izdelki.css?v=1.1">
